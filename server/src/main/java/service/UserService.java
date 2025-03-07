@@ -10,12 +10,13 @@ import model.response.result.*;
 public class UserService extends Service {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
-            UserDAO userDAO = UserDAO.getInstance();
-
             if (request.username() == null || request.password() == null || request.email() == null ||
                     request.username().isEmpty() || request.password().isEmpty() || request.email().isEmpty()) {
                 throw new BadRequestException();
             }
+
+            UserDAO userDAO = UserDAO.getInstance();
+
             if (userDAO.getUser(request.username()) != null) {
                 throw new PreexistingException();
             }
@@ -26,6 +27,10 @@ public class UserService extends Service {
 
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
+            if (request.username() == null || request.password() == null || request.username().isEmpty() || request.password().isEmpty()) {
+                throw new BadRequestException();
+            }
+
             UserDAO userDAO = UserDAO.getInstance();
             AuthDAO authDAO = AuthDAO.getInstance();
 
