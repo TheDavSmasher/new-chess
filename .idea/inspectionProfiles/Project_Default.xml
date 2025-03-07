@@ -1,0 +1,35 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="server" />
+          <option value="server" />
+          <option value="server" />
+          <option value="server" />
+          <option value="server" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="mysql:mysql-connector-java:8.0.30" />
+          <option value="org.eclipse.jetty:jetty-http:9.4.31.v20200723" />
+          <option value="org.eclipse.jetty:jetty-server:9.4.31.v20200723" />
+          <option value="org.eclipse.jetty:jetty-webapp:9.4.31.v20200723" />
+          <option value="org.eclipse.jetty:jetty-xml:9.4.31.v20200723" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
