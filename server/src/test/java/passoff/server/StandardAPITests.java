@@ -12,9 +12,7 @@ import java.util.Locale;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StandardAPITests {
-
     private static TestUser existingUser;
-
     private static TestUser newUser;
 
     private static TestCreateRequest createRequest;
@@ -38,7 +36,6 @@ public class StandardAPITests {
         serverFacade = new TestServerFacade("localhost", Integer.toString(port));
 
         existingUser = new TestUser("ExistingUser", "existingUserPassword", "eu@mail.com");
-
         newUser = new TestUser("NewUser", "newUserPassword", "nu@mail.com");
 
         createRequest = new TestCreateRequest("testGame");
@@ -48,7 +45,7 @@ public class StandardAPITests {
     public void setup() {
         serverFacade.clear();
 
-        //one user already logged in
+        //one user already registered and logged in
         TestAuthResult regResult = serverFacade.register(existingUser);
         existingAuth = regResult.getAuthToken();
     }
@@ -97,6 +94,20 @@ public class StandardAPITests {
 
         assertHttpUnauthorized(loginResult);
         assertAuthFieldsMissing(loginResult);
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Login Bad Request")
+    public void loginBadRequest() {
+        TestUser[] badRequests = { new TestUser(existingUser.getUsername(), null), new TestUser(null, newUser.getPassword()) };
+
+        for (TestUser badRequest : badRequests) {
+            TestAuthResult loginResult = serverFacade.login(badRequest);
+
+            assertHttpBadRequest(loginResult);
+            assertAuthFieldsMissing(loginResult);
+        }
     }
 
     @Test
@@ -179,6 +190,16 @@ public class StandardAPITests {
         TestCreateResult createResult = serverFacade.createGame(createRequest, existingAuth);
 
         assertHttpUnauthorized(createResult);
+        Assertions.assertNull(createResult.getGameID(), "Bad result returned a game ID");
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("Create Bad Request")
+    public void badNameCreate() {
+        TestCreateResult createResult = serverFacade.createGame(new TestCreateRequest(null), existingAuth);
+
+        assertHttpBadRequest(createResult);
         Assertions.assertNull(createResult.getGameID(), "Bad result returned a game ID");
     }
 
@@ -361,19 +382,15 @@ public class StandardAPITests {
         Assertions.assertNotEquals(loginOne.getAuthToken(), loginTwo.getAuthToken(),
                 "Authtoken returned by login matched authtoken from prior login");
 
-
         TestCreateResult createResult = serverFacade.createGame(createRequest, existingAuth);
         assertHttpOk(createResult);
-
 
         TestResult logoutResult = serverFacade.logout(existingAuth);
         assertHttpOk(logoutResult);
 
-
         TestJoinRequest joinRequest = new TestJoinRequest(ChessGame.TeamColor.WHITE, createResult.getGameID());
         TestResult joinResult = serverFacade.joinPlayer(joinRequest, loginOne.getAuthToken());
         assertHttpOk(joinResult);
-
 
         TestListResult listResult = serverFacade.listGames(loginTwo.getAuthToken());
         assertHttpOk(listResult);
@@ -436,7 +453,6 @@ public class StandardAPITests {
     @Order(14)
     @DisplayName("Multiple Clears")
     public void multipleClear() {
-
         //clear multiple times
         serverFacade.clear();
         serverFacade.clear();
@@ -478,5 +494,4 @@ public class StandardAPITests {
         Assertions.assertNull(result.getUsername(), "Response incorrectly returned username");
         Assertions.assertNull(result.getAuthToken(), "Response incorrectly return authentication String");
     }
-
 }
