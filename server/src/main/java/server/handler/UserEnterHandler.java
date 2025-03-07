@@ -1,6 +1,5 @@
 package server.handler;
 
-import model.request.JoinGameRequest;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
 import model.response.result.ServiceException;
