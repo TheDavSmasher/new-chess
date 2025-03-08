@@ -18,7 +18,7 @@ public class WebsocketCommunicator extends Endpoint {
         try {
             observer = messageObserver;
             url = url.replace("http", "ws");
-            URI socketURI = URI.create(url + "connect");
+            URI socketURI = URI.create(url + "ws");
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             session = container.connectToServer(this, socketURI);
