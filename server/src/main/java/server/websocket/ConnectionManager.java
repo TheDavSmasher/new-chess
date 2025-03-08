@@ -3,8 +3,8 @@ package server.websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
-import websocket.serverMessages.LoadGameMessage;
-import websocket.serverMessages.Notification;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.Notification;
 
 import java.io.IOException;
 import java.util.ArrayList;

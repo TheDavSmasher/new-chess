@@ -13,9 +13,9 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import service.GameService;
 import service.UserService;
-import websocket.serverMessages.ErrorMessage;
-import websocket.serverMessages.Notification;
-import websocket.userCommands.*;
+import websocket.messages.ErrorMessage;
+import websocket.messages.Notification;
+import websocket.commands.*;
 
 import java.io.IOException;
 
@@ -33,8 +33,7 @@ public class WSServer {
     public void onMessage(Session session, String message) {
         UserGameCommand gameCommand = deserialize(message, UserGameCommand.class);
         switch (gameCommand.getCommandType()){
-            case JOIN_PLAYER -> join(deserialize(message, JoinPlayerCommand.class), session);
-            case JOIN_OBSERVER -> observe(deserialize(message, JoinObserverCommand.class), session);
+            case CONNECT -> connect(deserialize(message, ConnectCommand.class), session);
             case MAKE_MOVE -> move(deserialize(message, MakeMoveCommand.class), session);
             case LEAVE -> leave(deserialize(message, LeaveCommand.class), session);
             case RESIGN -> resign(deserialize(message, ResignCommand.class), session);
@@ -42,36 +41,21 @@ public class WSServer {
     }
 
     private final ConnectionManager connectionManager = new ConnectionManager();
-
-    private void join(JoinPlayerCommand command, Session session) {
+    
+    private void connect(ConnectCommand command, Session session) {
         try {
-            String username = enter(command.getAuthString(), command.getGameID(), command.getColor(), session);
-            Notification notification = new Notification(username + " has joined the game as " + command.getColor() + ".");
-            connectionManager.notifyOthers(command.getGameID(), command.getAuthString(), notification);
-        } catch (ServiceException e) {
-            sendError(session, e.getMessage());
-        }
-    }
-
-    private void observe(JoinObserverCommand command, Session session) {
-        try {
-            String username = enter(command.getAuthString(), command.getGameID(), null,session);
+            String username = enter(command.getAuthToken(), command.getGameID(), session);
             Notification notification = new Notification(username + " is now observing the game.");
-            connectionManager.notifyOthers(command.getGameID(), command.getAuthString(), notification);
+            connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), notification);
         } catch (ServiceException e) {
             sendError(session, e.getMessage());
         }
     }
 
-    private String enter(String authToken, int gameID, ChessGame.TeamColor color, Session session) throws ServiceException {
+    private String enter(String authToken, int gameID, Session session) throws ServiceException {
         AuthData auth = UserService.validateAuth(authToken);
         GameData data = GameService.getGame(authToken, gameID);
         if (data == null) throw new ServiceException("Game does not exist.");
-        String user = color == ChessGame.TeamColor.WHITE ? data.whiteUsername() : data.blackUsername();
-        if (color != null) {
-            if (user == null) throw new ServiceException("RSVP the spot before calling this!");
-            if (!user.equals(auth.username())) throw new ServiceException("Color is already taken.");
-        }
         connectionManager.addToGame(gameID, authToken, auth.username(), session);
         connectionManager.loadNewGame(data.game(), authToken);
         return auth.username();
@@ -79,12 +63,12 @@ public class WSServer {
 
     private void move(MakeMoveCommand command, Session session) {
         try {
-            Connection connection = connectionManager.getFromUsers(command.getAuthString());
+            Connection connection = connectionManager.getFromUsers(command.getAuthToken());
             if (connection == null) {
                 sendError(session, UNAUTHORIZED);
                 return;
             }
-            GameData gameData = GameService.getGame(command.getAuthString(), command.getGameID());
+            GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
             if (userIsPlayer(gameData, connection.username) == null) {
                 sendError(session, "You need to be a player to make a move");
                 return;
@@ -96,26 +80,26 @@ public class WSServer {
             }
             game.makeMove(command.getMove());
             String gameJson = new Gson().toJson(game);
-            GameService.updateGameState(command.getAuthString(), command.getGameID(), gameJson);
+            GameService.updateGameState(command.getAuthToken(), command.getGameID(), gameJson);
 
             connectionManager.loadNewGame(game, command.getGameID());
             ChessMove move = command.getMove();
             Notification moveNotification = new Notification(connection.username + " has moved piece at " +
                     positionAsString(move.getStartPosition()) + " to " + positionAsString(move.getEndPosition()) + ".");
-            connectionManager.notifyOthers(command.getGameID(), command.getAuthString(), moveNotification);
+            connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), moveNotification);
 
             String opponent = (game.getTeamTurn() == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
             if (game.isInCheckmate(game.getTeamTurn())) {
                 Notification checkmateNotification = new Notification(opponent + " is now in checkmate.");
                 connectionManager.notifyAll(command.getGameID(), checkmateNotification);
-                endGame(command.getGameID(), command.getAuthString(), game, connection.username + " has won.");
+                endGame(command.getGameID(), command.getAuthToken(), game, connection.username + " has won.");
             } else if (game.isInStalemate(game.getTeamTurn())) {
                 Notification stalemateNotification = new Notification(opponent + " is now in stalemate.");
                 connectionManager.notifyAll(command.getGameID(), stalemateNotification);
-                endGame(command.getGameID(), command.getAuthString(), game, "The game is tied.");
+                endGame(command.getGameID(), command.getAuthToken(), game, "The game is tied.");
             } else if (game.isInCheck(game.getTeamTurn())) {
                 Notification checkNotification = new Notification(opponent + " is now in check.");
-                connectionManager.notifyOthers(command.getGameID(), command.getAuthString(), checkNotification);
+                connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), checkNotification);
             }
         } catch (ServiceException | InvalidMoveException e) {
             sendError(session, e.getMessage());
@@ -146,15 +130,15 @@ public class WSServer {
 
     private void leave(LeaveCommand command, Session session) {
         try {
-            Connection connection = connectionManager.getFromUsers(command.getAuthString());
+            Connection connection = connectionManager.getFromUsers(command.getAuthToken());
             if (connection == null) {
                 sendError(session, UNAUTHORIZED);
                 return;
             }
-            GameService.leaveGame(command.getAuthString(), command.getGameID());
-            connectionManager.removeFromGame(command.getGameID(), command.getAuthString());
+            GameService.leaveGame(command.getAuthToken(), command.getGameID());
+            connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
             Notification notification = new Notification(connection.username + " has left the game.");
-            connectionManager.notifyOthers(command.getGameID(), command.getAuthString(), notification);
+            connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), notification);
         } catch (ServiceException e) {
             sendError(session, e.getMessage());
         }
@@ -162,13 +146,13 @@ public class WSServer {
 
     private void resign(ResignCommand command, Session session) {
         try {
-            Connection connection = connectionManager.getFromUsers(command.getAuthString());
+            Connection connection = connectionManager.getFromUsers(command.getAuthToken());
             if (connection == null) {
                 sendError(session, UNAUTHORIZED);
                 return;
             }
-            GameService.leaveGame(command.getAuthString(), command.getGameID());
-            GameData gameData = GameService.getGame(command.getAuthString(), command.getGameID());
+            GameService.leaveGame(command.getAuthToken(), command.getGameID());
+            GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
             if (!gameData.game().gameInPlay()) {
                 sendError(session, "Game is already finished. You cannot resign anymore.");
                 return;
@@ -177,8 +161,8 @@ public class WSServer {
                 sendError(session, "You need to be a player to resign.");
                 return;
             }
-            endGame(command.getGameID(), command.getAuthString(), gameData.game(), connection.username + " has resigned the game.");
-            connectionManager.removeFromGame(command.getGameID(), command.getAuthString());
+            endGame(command.getGameID(), command.getAuthToken(), gameData.game(), connection.username + " has resigned the game.");
+            connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
         } catch (ServiceException e) {
             sendError(session, e.getMessage());
         }

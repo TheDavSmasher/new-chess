@@ -51,18 +51,10 @@ public class ServerFacade {
         return HttpCommunicator.doPost(url, body, authToken, CreateGameResponse.class);
     }
 
-    public static void observeGameWS(String authToken, int gameID) throws IOException {
-        websocket.observeGame(authToken, gameID);
-    }
-
     public static void joinGame(String authToken, String color, int gameID) throws IOException {
         String url = urlPort + "game";
         String body = new Gson().toJson(new JoinGameRequest(color, gameID));
         HttpCommunicator.doPut(url, body, authToken, EmptyResponse.class);
-    }
-
-    public static void joinGameWS(String authToken, String color, int gameID) throws IOException {
-        websocket.joinGame(authToken, gameID, color);
     }
 
     public static void logout(String authToken) throws IOException {
@@ -73,6 +65,11 @@ public class ServerFacade {
     public static void clear() throws IOException {
         String url = urlPort + "db";
         HttpCommunicator.doDelete(url, null, EmptyResponse.class);
+    }
+
+    //Websocket
+    public static void connectToGame(String authToken, int gameID) throws IOException {
+        websocket.connectToGame(authToken, gameID);
     }
 
     public static void makeMove(String authToken, int gameID, ChessMove move) throws IOException {

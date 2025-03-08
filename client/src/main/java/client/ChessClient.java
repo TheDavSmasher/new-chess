@@ -8,10 +8,10 @@ import client.websocket.ServerMessageObserver;
 import com.google.gson.Gson;
 import model.dataaccess.GameData;
 import ui.ChessUI;
-import websocket.serverMessages.ErrorMessage;
-import websocket.serverMessages.LoadGameMessage;
-import websocket.serverMessages.Notification;
-import websocket.serverMessages.ServerMessage;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.Notification;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -282,7 +282,7 @@ public class ChessClient implements ServerMessageObserver {
             }
             currentGameID = existingGames[index];
             ServerFacade.joinGame(authToken, params[0], currentGameID);
-            ServerFacade.joinGameWS(authToken, params[0], currentGameID);
+            ServerFacade.connectToGame(authToken, currentGameID);
             currentState = MenuState.MID_GAME;
             whitePlayer = params[0].equalsIgnoreCase("white");
         } catch (IOException e) {
@@ -311,7 +311,7 @@ public class ChessClient implements ServerMessageObserver {
                 return "Out of range";
             }
             currentGameID = existingGames[index];
-            ServerFacade.observeGameWS(authToken, currentGameID);
+            ServerFacade.connectToGame(authToken, currentGameID);
             currentState = MenuState.OBSERVING;
         } catch (IOException e) {
             out.print(e.getMessage());

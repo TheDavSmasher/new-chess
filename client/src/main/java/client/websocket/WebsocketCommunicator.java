@@ -1,10 +1,9 @@
 package client.websocket;
 
-import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
-import websocket.serverMessages.*;
-import websocket.userCommands.*;
+import websocket.messages.*;
+import websocket.commands.*;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -49,14 +48,8 @@ public class WebsocketCommunicator extends Endpoint {
         //Method needed to call, but no functionality is required
     }
 
-    public void joinGame(String authToken, int gameID, String color) throws IOException {
-        ChessGame.TeamColor teamColor = ChessGame.TeamColor.valueOf(color.toUpperCase());
-        JoinPlayerCommand command = new JoinPlayerCommand(authToken, gameID, teamColor);
-        sendCommand(new Gson().toJson(command));
-    }
-
-    public void observeGame(String authToken, int gameID) throws IOException {
-        JoinObserverCommand command = new JoinObserverCommand(authToken, gameID);
+    public void connectToGame(String authToken, int gameID) throws IOException {
+        ConnectCommand command = new ConnectCommand(authToken, gameID);
         sendCommand(new Gson().toJson(command));
     }
 
