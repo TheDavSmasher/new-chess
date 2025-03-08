@@ -151,7 +151,6 @@ public class WSServer {
                 sendError(session, UNAUTHORIZED);
                 return;
             }
-            GameService.leaveGame(command.getAuthToken(), command.getGameID());
             GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
             if (!gameData.game().gameInPlay()) {
                 sendError(session, "Game is already finished. You cannot resign anymore.");
@@ -161,6 +160,7 @@ public class WSServer {
                 sendError(session, "You need to be a player to resign.");
                 return;
             }
+            GameService.leaveGame(command.getAuthToken(), command.getGameID());
             endGame(command.getGameID(), command.getAuthToken(), gameData.game(), connection.username + " has resigned the game.");
             connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
         } catch (ServiceException e) {

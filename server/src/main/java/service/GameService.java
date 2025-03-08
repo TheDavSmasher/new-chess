@@ -63,10 +63,11 @@ public class GameService extends Service {
             if (gameID <= 0 || oldGame == null) {
                 throw new BadRequestException();
             }
-            if (oldGame.whiteUsername().equals(auth.username())) {
-                gameDAO.updateGamePlayer(gameID, "WHITE", auth.username());
-            } else if (oldGame.blackUsername().equals(auth.username())) {
-                gameDAO.updateGamePlayer(gameID, "BLACK", auth.username());
+
+            if (oldGame.whiteUsername() != null && oldGame.whiteUsername().equals(auth.username())) {
+                gameDAO.updateGamePlayer(gameID, "WHITE", null);
+            } else if (oldGame.blackUsername() != null && oldGame.blackUsername().equals(auth.username())) {
+                gameDAO.updateGamePlayer(gameID, "BLACK", null);
             }
         });
     }
