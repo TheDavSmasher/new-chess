@@ -90,13 +90,9 @@ public class WSServer {
 
             String opponent = (game.getTeamTurn() == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
             if (game.isInCheckmate(game.getTeamTurn())) {
-                Notification checkmateNotification = new Notification(opponent + " is now in checkmate.");
-                connectionManager.notifyAll(command.getGameID(), checkmateNotification);
-                endGame(command.getGameID(), command.getAuthToken(), game, connection.username + " has won.");
+                endGame(command.getGameID(), command.getAuthToken(), game, opponent + " is now in checkmate.\n" + connection.username + " has won.");
             } else if (game.isInStalemate(game.getTeamTurn())) {
-                Notification stalemateNotification = new Notification(opponent + " is now in stalemate.");
-                connectionManager.notifyAll(command.getGameID(), stalemateNotification);
-                endGame(command.getGameID(), command.getAuthToken(), game, "The game is tied.");
+                endGame(command.getGameID(), command.getAuthToken(), game, opponent + " is now in stalemate.\nThe game is tied.");
             } else if (game.isInCheck(game.getTeamTurn())) {
                 Notification checkNotification = new Notification(opponent + " is now in check.");
                 connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), checkNotification);
