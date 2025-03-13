@@ -17,7 +17,6 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     @Override
     public UserData getUser(String username) throws DataAccessException {
         return tryStatement("SELECT * FROM users WHERE username =?", preparedStatement -> {
-            preparedStatement.setString(1, username);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (!rs.next()) return null;
                 String name = rs.getString("username");
@@ -25,7 +24,7 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
                 String email = rs.getString("email");
                 return new UserData(name, password, email);
             }
-        });
+        }, username);
     }
 
     @Override
@@ -42,14 +41,10 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     public void createUser(String username, String password, String email) throws DataAccessException {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         tryStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", preparedStatement -> {
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, hashedPassword);
-            preparedStatement.setString(3, email);
-
             if (preparedStatement.executeUpdate() == 0) {
                 throw new DataAccessException("Did not create any user");
             }
-        });
+        }, username, hashedPassword, email);
     }
 
     @Override

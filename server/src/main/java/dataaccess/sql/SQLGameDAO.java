@@ -37,7 +37,6 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         return tryStatement("SELECT * FROM games WHERE gameID =?", preparedStatement -> {
-            preparedStatement.setInt(1, gameID);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (!rs.next()) return null;
                 int id = rs.getInt("gameID");
@@ -49,7 +48,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
                 return new GameData(id, white, black, name, game);
             }
-        });
+        }, gameID);
     }
 
     @Override
@@ -57,9 +56,6 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
         ChessGame game = new ChessGame();
         String gameJson = new Gson().toJson(game);
         return tryStatement("INSERT INTO games (gameName, game) VALUES (?, ?)", preparedStatement -> {
-            preparedStatement.setString(1, gameName);
-            preparedStatement.setString(2, gameJson);
-
             if (preparedStatement.executeUpdate() == 0) {
                 throw new DataAccessException("Did not create any game");
             }
@@ -71,32 +67,25 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
             }
 
             return new GameData(id, gameName, game);
-        });
+        }, gameName, gameJson);
     }
 
     @Override
     public void updateGamePlayer(int gameID, String color, String username) throws DataAccessException {
-        tryStatement("UPDATE games SET "+ (color.equals("WHITE") ? "whiteUsername" : "blackUsername") +"=? WHERE gameID=?",
-                preparedStatement -> {
-            preparedStatement.setString(1, username);
-            preparedStatement.setInt(2, gameID);
-
+        tryStatement("UPDATE games SET "+ (color.equals("WHITE") ? "whiteUsername" : "blackUsername") +"=? WHERE gameID=?", preparedStatement -> {
             if (preparedStatement.executeUpdate() == 0) {
                 throw new DataAccessException("Did not update any game");
             }
-        });
+        }, username, gameID);
     }
 
     @Override
     public void updateGameBoard(int gameID, String gameJson) throws DataAccessException {
         tryStatement("UPDATE games SET game=? WHERE gameID=?", preparedStatement -> {
-            preparedStatement.setString(1, gameJson);
-            preparedStatement.setInt(2, gameID);
-
             if (preparedStatement.executeUpdate() == 0) {
                 throw new DataAccessException("Did not update any game");
             }
-        });
+        }, gameJson, gameID);
     }
 
     @Override

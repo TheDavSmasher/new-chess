@@ -13,9 +13,10 @@ public abstract class SQLDAO {
     private static boolean databaseConfigured = false;
 
 
-    protected static <T> T tryStatement(@Language("SQL") String sql, SqlQuery<T> query) throws DataAccessException {
+    protected static <T> T tryStatement(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                setParams(statement, params);
                 return query.execute(statement);
             }
         } catch (SQLException e) {
@@ -23,13 +24,25 @@ public abstract class SQLDAO {
         }
     }
 
-    protected static void tryStatement(@Language("SQL") String sql, SqlUpdate update) throws DataAccessException {
+    protected static void tryStatement(@Language("SQL") String sql, SqlUpdate update, Object... params) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                setParams(statement, params);
                 update.execute(statement);
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    private static void setParams(PreparedStatement statement, Object[] params) throws SQLException {
+        int i = 1;
+        for (Object param : params) {
+            switch (param) {
+                case String s -> statement.setString(i++, s);
+                case Integer s -> statement.setInt(i++, s);
+                default -> statement.setString(i++, param.toString()); //shouldn't be needed
+            }
         }
     }
 
