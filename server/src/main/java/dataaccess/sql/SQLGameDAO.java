@@ -8,6 +8,7 @@ import model.dataaccess.GameData;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLGameDAO extends SQLDAO implements GameDAO {
     private static SQLGameDAO instance;
@@ -55,19 +56,18 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     public GameData createGame(String gameName) throws DataAccessException {
         ChessGame game = new ChessGame();
         String gameJson = new Gson().toJson(game);
-        return tryStatement("INSERT INTO games (gameName, game) VALUES (?, ?)", preparedStatement -> {
+        AtomicInteger id = new AtomicInteger();
+        tryStatement("INSERT INTO games (gameName, game) VALUES (?, ?)", preparedStatement -> {
             if (preparedStatement.executeUpdate() == 0) {
                 throw new DataAccessException("Did not create any game");
             }
 
-            int id;
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 rs.next();
-                id = rs.getInt(1);
+                id.set(rs.getInt(1));
             }
-
-            return new GameData(id, gameName, game);
         }, gameName, gameJson);
+        return new GameData(id.get(), gameName, game);
     }
 
     @Override
