@@ -30,6 +30,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
                     gameList.add(new GameData(id, white, black, name));
                 }
+                return null;
             }
         });
         return gameList;
@@ -57,23 +58,19 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
         ChessGame game = new ChessGame();
         String gameJson = new Gson().toJson(game);
         AtomicInteger id = new AtomicInteger();
-        tryStatement("INSERT INTO games (gameName, game) VALUES (?, ?)", preparedStatement -> {
-            if (preparedStatement.executeUpdate() == 0) {
+        tryUpdate("INSERT INTO games (gameName, game) VALUES (?, ?)", updateResKey -> {
+            if (updateResKey == 0) {
                 throw new DataAccessException("Did not create any game");
             }
-
-            try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
-                rs.next();
-                id.set(rs.getInt(1));
-            }
+            id.set(updateResKey);
         }, gameName, gameJson);
         return new GameData(id.get(), gameName, game);
     }
 
     @Override
     public void updateGamePlayer(int gameID, String color, String username) throws DataAccessException {
-        tryStatement("UPDATE games SET "+ (color.equals("WHITE") ? "whiteUsername" : "blackUsername") +"=? WHERE gameID=?", preparedStatement -> {
-            if (preparedStatement.executeUpdate() == 0) {
+        tryUpdate("UPDATE games SET "+ (color.equals("WHITE") ? "whiteUsername" : "blackUsername") +"=? WHERE gameID=?", updateRes -> {
+            if (updateRes == 0) {
                 throw new DataAccessException("Did not update any game");
             }
         }, username, gameID);
@@ -81,8 +78,8 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     @Override
     public void updateGameBoard(int gameID, String gameJson) throws DataAccessException {
-        tryStatement("UPDATE games SET game=? WHERE gameID=?", preparedStatement -> {
-            if (preparedStatement.executeUpdate() == 0) {
+        tryUpdate("UPDATE games SET game=? WHERE gameID=?", updateRes -> {
+            if (updateRes == 0) {
                 throw new DataAccessException("Did not update any game");
             }
         }, gameJson, gameID);
@@ -90,9 +87,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     @Override
     public void clear() throws DataAccessException {
-        tryStatement("TRUNCATE games", preparedStatement -> {
-            preparedStatement.executeUpdate();
-        });
+        tryUpdate("TRUNCATE games", SQLDAO::cleared);
     }
 
     public static GameDAO getInstance() throws DataAccessException {

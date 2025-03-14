@@ -40,8 +40,8 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     @Override
     public void createUser(String username, String password, String email) throws DataAccessException {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        tryStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", preparedStatement -> {
-            if (preparedStatement.executeUpdate() == 0) {
+        tryUpdate("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", resultRes -> {
+            if (resultRes == 0) {
                 throw new DataAccessException("Did not create any user");
             }
         }, username, hashedPassword, email);
@@ -49,9 +49,7 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
 
     @Override
     public void clear() throws DataAccessException {
-        tryStatement("TRUNCATE users", preparedStatement -> {
-            preparedStatement.executeUpdate();
-        });
+        tryUpdate("TRUNCATE users", SQLDAO::cleared);
     }
 
     public static UserDAO getInstance() throws DataAccessException {
