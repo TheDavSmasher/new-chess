@@ -41,7 +41,7 @@ public abstract class SQLDAO {
         }
     }
 
-    private static void setParams(PreparedStatement statement, Object[] params) throws SQLException, DataAccessException {
+    private static void setParams(PreparedStatement statement, Object[] params) throws SQLException {
         int i = 1;
         for (Object param : params) {
             switch (param) {
