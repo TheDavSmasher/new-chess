@@ -11,12 +11,14 @@ import static java.sql.Types.NULL;
 public abstract class SQLDAO {
     private static boolean databaseConfigured = false;
 
-
-    protected static <T> T tryStatement(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
+    protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 setParams(statement, params);
-                return query.execute(statement);
+                try (ResultSet rs = statement.executeQuery()) {
+                    if (!rs.next()) return null;
+                    return query.execute(rs);
+                }
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());

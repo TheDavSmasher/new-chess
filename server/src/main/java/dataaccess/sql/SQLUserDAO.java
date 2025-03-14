@@ -5,8 +5,6 @@ import dataaccess.UserDAO;
 import model.dataaccess.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.ResultSet;
-
 public class SQLUserDAO extends SQLDAO implements UserDAO {
     private static SQLUserDAO instance;
 
@@ -16,14 +14,11 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return tryStatement("SELECT * FROM users WHERE username =?", preparedStatement -> {
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (!rs.next()) return null;
-                String name = rs.getString("username");
-                String password = rs.getString("password");
-                String email = rs.getString("email");
-                return new UserData(name, password, email);
-            }
+        return tryQuery("SELECT * FROM users WHERE username =?", rs -> {
+            String name = rs.getString("username");
+            String password = rs.getString("password");
+            String email = rs.getString("email");
+            return new UserData(name, password, email);
         }, username);
     }
 

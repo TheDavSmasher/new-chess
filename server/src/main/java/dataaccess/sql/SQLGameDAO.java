@@ -6,7 +6,6 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.dataaccess.GameData;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,37 +18,31 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     @Override
     public ArrayList<GameData> listGames() throws DataAccessException {
-        ArrayList<GameData> gameList = new ArrayList<>();
-        tryStatement("SELECT gameID, whiteUsername, blackUsername, gameName FROM games", preparedStatement -> {
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("gameID");
-                    String white = rs.getString("whiteUsername");
-                    String black = rs.getString("blackUsername");
-                    String name = rs.getString("gameName");
-
-                    gameList.add(new GameData(id, white, black, name));
-                }
-                return null;
-            }
-        });
-        return gameList;
-    }
-
-    @Override
-    public GameData getGame(int gameID) throws DataAccessException {
-        return tryStatement("SELECT * FROM games WHERE gameID =?", preparedStatement -> {
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (!rs.next()) return null;
+        return tryQuery("SELECT gameID, whiteUsername, blackUsername, gameName FROM games", rs -> {
+            ArrayList<GameData> gameList = new ArrayList<>();
+            do {
                 int id = rs.getInt("gameID");
                 String white = rs.getString("whiteUsername");
                 String black = rs.getString("blackUsername");
                 String name = rs.getString("gameName");
-                String gameJson = rs.getString("game");
-                ChessGame game = new Gson().fromJson(gameJson, ChessGame.class);
 
-                return new GameData(id, white, black, name, game);
-            }
+                gameList.add(new GameData(id, white, black, name));
+            } while (rs.next());
+            return gameList;
+        });
+    }
+
+    @Override
+    public GameData getGame(int gameID) throws DataAccessException {
+        return tryQuery("SELECT * FROM games WHERE gameID =?", rs -> {
+            int id = rs.getInt("gameID");
+            String white = rs.getString("whiteUsername");
+            String black = rs.getString("blackUsername");
+            String name = rs.getString("gameName");
+            String gameJson = rs.getString("game");
+            ChessGame game = new Gson().fromJson(gameJson, ChessGame.class);
+
+            return new GameData(id, white, black, name, game);
         }, gameID);
     }
 

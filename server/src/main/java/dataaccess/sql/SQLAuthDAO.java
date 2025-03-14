@@ -4,7 +4,6 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import model.dataaccess.AuthData;
 
-import java.sql.ResultSet;
 import java.util.UUID;
 
 public class SQLAuthDAO extends SQLDAO implements AuthDAO {
@@ -16,13 +15,10 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
 
     @Override
     public AuthData getAuth(String token) throws DataAccessException {
-        return tryStatement("SELECT * FROM auth WHERE authToken=?", preparedStatement -> {
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (!rs.next()) return null;
-                String authToken = rs.getString("authToken");
-                String name = rs.getString("username");
-                return new AuthData(name, authToken);
-            }
+        return tryQuery("SELECT * FROM auth WHERE authToken=?", rs -> {
+            String authToken = rs.getString("authToken");
+            String name = rs.getString("username");
+            return new AuthData(name, authToken);
         }, token);
     }
 
