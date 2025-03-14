@@ -59,9 +59,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
         String gameJson = new Gson().toJson(game);
         AtomicInteger id = new AtomicInteger();
         tryUpdate("INSERT INTO games (gameName, game) VALUES (?, ?)", updateResKey -> {
-            if (updateResKey == 0) {
-                throw new DataAccessException("Did not create any game");
-            }
+            SQLDAO.confirmUpdate(updateResKey);
             id.set(updateResKey);
         }, gameName, gameJson);
         return new GameData(id.get(), gameName, game);
@@ -69,20 +67,12 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     @Override
     public void updateGamePlayer(int gameID, String color, String username) throws DataAccessException {
-        tryUpdate("UPDATE games SET "+ (color.equals("WHITE") ? "whiteUsername" : "blackUsername") +"=? WHERE gameID=?", updateRes -> {
-            if (updateRes == 0) {
-                throw new DataAccessException("Did not update any game");
-            }
-        }, username, gameID);
+        tryUpdate("UPDATE games SET "+ (color.equals("WHITE") ? "whiteUsername" : "blackUsername") +"=? WHERE gameID=?", SQLDAO::confirmUpdate, username, gameID);
     }
 
     @Override
     public void updateGameBoard(int gameID, String gameJson) throws DataAccessException {
-        tryUpdate("UPDATE games SET game=? WHERE gameID=?", updateRes -> {
-            if (updateRes == 0) {
-                throw new DataAccessException("Did not update any game");
-            }
-        }, gameJson, gameID);
+        tryUpdate("UPDATE games SET game=? WHERE gameID=?", SQLDAO::confirmUpdate, gameJson, gameID);
     }
 
     @Override

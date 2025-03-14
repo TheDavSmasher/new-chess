@@ -52,6 +52,12 @@ public abstract class SQLDAO {
         }
     }
 
+    protected static void confirmUpdate(int updateResult) throws DataAccessException {
+        if (updateResult == 0) {
+            throw new DataAccessException("No rows were updated");
+        }
+    }
+
     protected static void cleared(int ignored) {}
 
     protected static void configureDatabase() throws DataAccessException {

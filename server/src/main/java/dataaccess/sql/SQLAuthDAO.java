@@ -29,21 +29,13 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
         String token = UUID.randomUUID().toString();
-        tryUpdate("INSERT INTO auth (authToken, username) VALUES (?, ?)", updateRes -> {
-            if (updateRes == 0) {
-                throw new DataAccessException("Did not create any auth");
-            }
-        }, token, username);
+        tryUpdate("INSERT INTO auth (authToken, username) VALUES (?, ?)", SQLDAO::confirmUpdate, token, username);
         return new AuthData(username, token);
     }
 
     @Override
     public void deleteAuth(String token) throws DataAccessException {
-        tryUpdate("DELETE FROM auth WHERE authToken=?", updateRes -> {
-            if (updateRes == 0) {
-                throw new DataAccessException("Did not delete any auth");
-            }
-        }, token);
+        tryUpdate("DELETE FROM auth WHERE authToken=?", SQLDAO::confirmUpdate, token);
     }
 
     @Override
