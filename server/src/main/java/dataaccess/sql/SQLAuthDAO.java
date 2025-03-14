@@ -16,6 +16,7 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     @Override
     public AuthData getAuth(String token) throws DataAccessException {
         return tryQuery("SELECT * FROM auth WHERE authToken=?", rs -> {
+            if (!rs.next()) return null;
             String authToken = rs.getString("authToken");
             String name = rs.getString("username");
             return new AuthData(name, authToken);

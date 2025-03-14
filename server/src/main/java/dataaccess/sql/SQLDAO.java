@@ -16,7 +16,6 @@ public abstract class SQLDAO {
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 setParams(statement, params);
                 try (ResultSet rs = statement.executeQuery()) {
-                    if (!rs.next()) return null;
                     return query.execute(rs);
                 }
             }

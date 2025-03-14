@@ -20,14 +20,14 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     public ArrayList<GameData> listGames() throws DataAccessException {
         return tryQuery("SELECT gameID, whiteUsername, blackUsername, gameName FROM games", rs -> {
             ArrayList<GameData> gameList = new ArrayList<>();
-            do {
+            while (rs.next()) {
                 int id = rs.getInt("gameID");
                 String white = rs.getString("whiteUsername");
                 String black = rs.getString("blackUsername");
                 String name = rs.getString("gameName");
 
                 gameList.add(new GameData(id, white, black, name));
-            } while (rs.next());
+            }
             return gameList;
         });
     }
@@ -35,6 +35,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         return tryQuery("SELECT * FROM games WHERE gameID =?", rs -> {
+            if (!rs.next()) return null;
             int id = rs.getInt("gameID");
             String white = rs.getString("whiteUsername");
             String black = rs.getString("blackUsername");
