@@ -81,9 +81,6 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     }
 
     public static GameDAO getInstance() throws DataAccessException {
-        if (instance == null) {
-            instance = new SQLGameDAO();
-        }
-        return instance;
+        return instance == null ? (instance = new SQLGameDAO()) : instance;
     }
 }

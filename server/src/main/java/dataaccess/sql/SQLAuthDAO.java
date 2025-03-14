@@ -44,9 +44,6 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     }
 
     public static AuthDAO getInstance() throws DataAccessException {
-        if (instance == null) {
-            instance = new SQLAuthDAO();
-        }
-        return instance;
+        return instance == null ? (instance = new SQLAuthDAO()) : instance;
     }
 }

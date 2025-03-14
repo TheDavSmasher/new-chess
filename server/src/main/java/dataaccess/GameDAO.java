@@ -15,9 +15,6 @@ public interface GameDAO {
     void updateGameBoard(int gameID, String gameJson) throws DataAccessException;
     void clear() throws DataAccessException;
     static GameDAO getInstance() throws DataAccessException {
-        if (Service.UseSQL) {
-            return SQLGameDAO.getInstance();
-        }
-        return MemoryGameDAO.getInstance();
+        return Service.UseSQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
     }
 }

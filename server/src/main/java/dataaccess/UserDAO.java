@@ -11,9 +11,6 @@ public interface UserDAO {
     void createUser(String username, String password, String email) throws DataAccessException;
     void clear() throws DataAccessException;
     static UserDAO getInstance() throws DataAccessException {
-        if (Service.UseSQL) {
-            return SQLUserDAO.getInstance();
-        }
-        return MemoryUserDAO.getInstance();
+        return Service.UseSQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
     }
 }

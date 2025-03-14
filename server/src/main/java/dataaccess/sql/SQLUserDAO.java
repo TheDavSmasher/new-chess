@@ -49,9 +49,6 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     }
 
     public static UserDAO getInstance() throws DataAccessException {
-        if (instance == null) {
-            instance = new SQLUserDAO();
-        }
-        return instance;
+        return instance == null ? (instance = new SQLUserDAO()) : instance;
     }
 }

@@ -11,9 +11,6 @@ public interface AuthDAO {
     void deleteAuth(String token) throws DataAccessException;
     void clear() throws DataAccessException;
     static AuthDAO getInstance() throws DataAccessException {
-        if (Service.UseSQL) {
-            return SQLAuthDAO.getInstance();
-        }
-        return MemoryAuthDAO.getInstance();
+        return Service.UseSQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
     }
 }
