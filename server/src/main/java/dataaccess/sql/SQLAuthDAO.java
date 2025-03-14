@@ -9,9 +9,7 @@ import java.util.UUID;
 public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     private static SQLAuthDAO instance;
 
-    public SQLAuthDAO() throws DataAccessException {
-        configureDatabase();
-    }
+    public SQLAuthDAO() throws DataAccessException {}
 
     @Override
     public AuthData getAuth(String token) throws DataAccessException {

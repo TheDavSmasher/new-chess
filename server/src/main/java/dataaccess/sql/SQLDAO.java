@@ -11,6 +11,13 @@ import static java.sql.Types.NULL;
 public abstract class SQLDAO {
     private static boolean databaseConfigured = false;
 
+    protected SQLDAO() throws DataAccessException {
+        if (!databaseConfigured) {
+            DatabaseManager.configureDatabase();
+            databaseConfigured = true;
+        }
+    }
+
     protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -60,11 +67,4 @@ public abstract class SQLDAO {
     }
 
     protected static void cleared(int ignored) {}
-
-    protected static void configureDatabase() throws DataAccessException {
-        if (!databaseConfigured) {
-            DatabaseManager.configureDatabase();
-            databaseConfigured = true;
-        }
-    }
 }

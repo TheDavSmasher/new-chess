@@ -8,9 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class SQLUserDAO extends SQLDAO implements UserDAO {
     private static SQLUserDAO instance;
 
-    public SQLUserDAO () throws DataAccessException {
-        configureDatabase();
-    }
+    public SQLUserDAO () throws DataAccessException {}
 
     @Override
     public UserData getUser(String username) throws DataAccessException {

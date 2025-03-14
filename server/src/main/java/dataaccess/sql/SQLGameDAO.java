@@ -12,9 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SQLGameDAO extends SQLDAO implements GameDAO {
     private static SQLGameDAO instance;
 
-    public SQLGameDAO () throws DataAccessException {
-        configureDatabase();
-    }
+    public SQLGameDAO () throws DataAccessException {}
 
     @Override
     public ArrayList<GameData> listGames() throws DataAccessException {
