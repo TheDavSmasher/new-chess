@@ -20,7 +20,7 @@ public abstract class SQLDAO {
 
     protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         try (Connection connection = DatabaseManager.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 setParams(statement, params);
                 try (ResultSet rs = statement.executeQuery()) {
                     return query.execute(rs);
