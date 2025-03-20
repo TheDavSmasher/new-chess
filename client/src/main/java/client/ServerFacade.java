@@ -24,19 +24,20 @@ public class ServerFacade {
     public static void setPort(int port) {
         urlPort = "http://localhost:" + port + "/";
     }
+
     public static void setObserver(ServerMessageObserver observer) throws IOException {
         websocket = new WebsocketCommunicator(urlPort, observer);
     }
 
     public static UserEnterResponse register(String username, String password, String email) throws IOException {
         String url = urlPort + "user";
-        String body = new Gson().toJson(new UserEnterRequest(username, password, email));
+        String body = serialize(new UserEnterRequest(username, password, email));
         return HttpCommunicator.doPost(url, body, null, UserEnterResponse.class);
     }
 
     public static UserEnterResponse login(String username, String password) throws IOException {
         String url = urlPort + "session";
-        String body = new Gson().toJson(new UserEnterRequest(username, password, null));
+        String body = serialize(new UserEnterRequest(username, password, null));
         return HttpCommunicator.doPost(url, body, null, UserEnterResponse.class);
     }
 
@@ -47,13 +48,13 @@ public class ServerFacade {
 
     public static CreateGameResponse createGame(String authToken, String gameName) throws IOException {
         String url = urlPort + "game";
-        String body = new Gson().toJson(new CreateGameRequest(gameName));
+        String body = serialize(new CreateGameRequest(gameName));
         return HttpCommunicator.doPost(url, body, authToken, CreateGameResponse.class);
     }
 
     public static void joinGame(String authToken, String color, int gameID) throws IOException {
         String url = urlPort + "game";
-        String body = new Gson().toJson(new JoinGameRequest(color, gameID));
+        String body = serialize(new JoinGameRequest(color, gameID));
         HttpCommunicator.doPut(url, body, authToken, EmptyResponse.class);
     }
 
@@ -82,5 +83,9 @@ public class ServerFacade {
 
     public static void resignGame(String authToken, int gameID) throws IOException {
         websocket.resignGame(authToken, gameID);
+    }
+
+    private static String serialize(Object data) {
+        return new Gson().toJson(data);
     }
 }
