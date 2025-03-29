@@ -44,12 +44,11 @@ public abstract class SQLDAO {
     private static PreparedStatement getStatement(String sql, Object... params) throws DataAccessException, SQLException {
         Connection connection = DatabaseManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        int i = 1;
-        for (Object param : params) {
-            switch (param) {
-                case String s -> statement.setString(i++, s);
-                case Integer s -> statement.setInt(i++, s);
-                case null, default -> statement.setNull(i++, NULL);
+        for (int i = 0; i < params.length;) {
+            switch (params[i]) {
+                case String s -> statement.setString(++i, s);
+                case Integer s -> statement.setInt(++i, s);
+                case null, default -> statement.setNull(++i, NULL);
             }
         }
         return statement;
