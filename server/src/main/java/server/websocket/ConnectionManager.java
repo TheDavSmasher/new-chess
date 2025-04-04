@@ -60,9 +60,10 @@ public class ConnectionManager {
         return gson.toJson(new LoadGameMessage(gameJson));
     }
 
-    public void notifyOthers(int gameID, String authToken, Notification notification) {
+    public void notifyGame(int gameID, Notification notification, String authToken) {
         ArrayList<Connection> closed = new ArrayList<>();
         ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
+        if (authToken == null) authToken = "";
 
         String message = new Gson().toJson(notification);
         for (Connection current : gameConnections) {
@@ -76,23 +77,6 @@ public class ConnectionManager {
         for (Connection close : closed) {
             gameConnections.remove(close);
         }
-    }
-
-    public void notifyAll(int gameID, Notification notification) {
-        ArrayList<Connection> closed = new ArrayList<>();
-        ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
-        String message = new Gson().toJson(notification);
-        for (Connection current : gameConnections) {
-            if (current.session.isOpen()) {
-                sendToConnection(current, message);
-            } else {
-                closed.add(current);
-            }
-        }
-        for (Connection close : closed) {
-            gameConnections.remove(close);
-        }
-
     }
 
     public void sendToConnection(Connection connection, String message) {
