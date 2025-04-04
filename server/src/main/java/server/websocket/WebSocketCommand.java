@@ -24,15 +24,11 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
         try {
             execute(deserialize(message, getCommandClass()), session);
         } catch (ServiceException e) {
-            sendError(session, e.getMessage());
+            try {
+                ErrorMessage error = new ErrorMessage(message);
+                session.getRemote().sendString(serialize(error));
+            } catch (IOException ignored) {}
         }
-    }
-
-    protected void sendError(Session session, String message) {
-        try {
-            ErrorMessage error = new ErrorMessage(message);
-            session.getRemote().sendString(serialize(error));
-        } catch (IOException ignored) {}
     }
 
     protected void notifyGame(int gameID, String message) {
