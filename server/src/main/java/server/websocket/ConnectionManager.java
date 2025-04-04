@@ -2,6 +2,7 @@ package server.websocket;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import model.dataaccess.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
@@ -22,13 +23,15 @@ public class ConnectionManager {
         userConnections.remove(authToken);
     }
 
-    public void addToGame(int gameID, String authToken, String username, Session session) {
+    public void addToGame(GameData gameData, String authToken, String username, Session session) {
         Connection newConnection = new Connection(username, session);
-        if (!connectionsToGames.containsKey(gameID)) {
-            connectionsToGames.put(gameID, new ArrayList<>());
+        if (!connectionsToGames.containsKey(gameData.gameID())) {
+            connectionsToGames.put(gameData.gameID(), new ArrayList<>());
         }
-        connectionsToGames.get(gameID).add(newConnection);
+        connectionsToGames.get(gameData.gameID()).add(newConnection);
         addToUsers(authToken, newConnection);
+
+        sendToConnection(userConnections.get(authToken), getGameString(gameData.game()));
     }
 
     public void removeFromGame(int gameID, String authToken) {
@@ -47,11 +50,6 @@ public class ConnectionManager {
         for (Connection current : connectionsToGames.get(gameID)) {
             sendToConnection(current, message);
         }
-    }
-
-    public void loadNewGame(ChessGame game, String authToken) {
-        String message = getGameString(game);
-        sendToConnection(userConnections.get(authToken), message);
     }
 
     private String getGameString(ChessGame game) {
