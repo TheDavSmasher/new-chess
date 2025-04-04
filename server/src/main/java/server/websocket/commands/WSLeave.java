@@ -21,6 +21,6 @@ public class WSLeave extends WSChessCommand<LeaveCommand> {
         String username = CheckConnection(command.getAuthToken());
         GameService.leaveGame(command.getAuthToken(), command.getGameID());
         connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
-        notifyGame(command.getGameID(), command.getAuthToken(), username + " has left the game.");
+        notifyGame(command.getGameID(), username + " has left the game.");
     }
 }

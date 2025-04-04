@@ -22,16 +22,12 @@ public class WSConnect extends WebSocketCommand<ConnectCommand> {
 
     @Override
     protected void execute(ConnectCommand command, Session session) throws ServiceException {
-        String username = enter(command.getAuthToken(), command.getGameID(), session);
-        notifyGame(command.getGameID(), command.getAuthToken(), username + " is now observing the game.");
-    }
-
-    private String enter(String authToken, int gameID, Session session) throws ServiceException {
-        AuthData auth = UserService.validateAuth(authToken);
-        GameData data = GameService.getGame(authToken, gameID);
+        AuthData auth = UserService.validateAuth(command.getAuthToken());
+        GameData data = GameService.getGame(command.getAuthToken(), command.getGameID());
         if (data == null) throw new ServiceException("Game does not exist.");
-        connectionManager.addToGame(gameID, authToken, auth.username(), session);
-        connectionManager.loadNewGame(data.game(), authToken);
-        return auth.username();
+        String username = auth.username();
+        notifyGame(command.getGameID(), username + " is now observing the game.");
+        connectionManager.addToGame(command.getGameID(), command.getAuthToken(), auth.username(), session);
+        connectionManager.loadNewGame(data.game(), command.getAuthToken());
     }
 }
