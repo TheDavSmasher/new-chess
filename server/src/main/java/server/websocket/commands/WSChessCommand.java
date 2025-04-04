@@ -16,12 +16,6 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         super(connectionManager);
     }
 
-    protected ChessGame.TeamColor userIsPlayer(GameData data, String username) {
-        if (data.whiteUsername() != null && data.whiteUsername().equals(username)) return ChessGame.TeamColor.WHITE;
-        if (data.blackUsername() != null && data.blackUsername().equals(username)) return ChessGame.TeamColor.BLACK;
-        return null;
-    }
-
     protected void endGame(int gameID, String authToken, ChessGame game, String gameState) throws ServiceException {
         game.endGame();
         GameService.updateGameState(authToken, gameID, serialize(game));
@@ -54,5 +48,11 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
             throw new ServiceException("It is not your turn to make a move.");
         }
         return gameData;
+    }
+
+    private ChessGame.TeamColor userIsPlayer(GameData data, String username) {
+        if (data.whiteUsername() != null && data.whiteUsername().equals(username)) return ChessGame.TeamColor.WHITE;
+        if (data.blackUsername() != null && data.blackUsername().equals(username)) return ChessGame.TeamColor.BLACK;
+        return null;
     }
 }
