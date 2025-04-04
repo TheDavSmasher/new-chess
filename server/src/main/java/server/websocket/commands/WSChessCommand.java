@@ -8,7 +8,6 @@ import server.websocket.ConnectionManager;
 import server.websocket.WebSocketCommand;
 import service.GameService;
 import websocket.commands.UserGameCommand;
-import websocket.messages.Notification;
 
 public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocketCommand<T> {
     protected static final String UNAUTHORIZED = "You are unauthorized.";
