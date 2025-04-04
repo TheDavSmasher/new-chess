@@ -18,15 +18,11 @@ public class WSLeave extends WSChessCommand<LeaveCommand> {
     }
 
     @Override
-    protected void Execute(LeaveCommand command, Session session) {
-        try {
-            String username = CheckConnection(command.getAuthToken());
-            GameService.leaveGame(command.getAuthToken(), command.getGameID());
-            connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
-            Notification notification = new Notification(username + " has left the game.");
-            connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), notification);
-        } catch (ServiceException e) {
-            sendError(session, e.getMessage());
-        }
+    protected void Execute(LeaveCommand command, Session session) throws ServiceException {
+        String username = CheckConnection(command.getAuthToken());
+        GameService.leaveGame(command.getAuthToken(), command.getGameID());
+        connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
+        Notification notification = new Notification(username + " has left the game.");
+        connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), notification);
     }
 }

@@ -22,14 +22,10 @@ public class WSConnect extends WebSocketCommand<ConnectCommand> {
     }
 
     @Override
-    protected void Execute(ConnectCommand command, Session session) {
-        try {
-            String username = enter(command.getAuthToken(), command.getGameID(), session);
-            Notification notification = new Notification(username + " is now observing the game.");
-            connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), notification);
-        } catch (ServiceException e) {
-            sendError(session, e.getMessage());
-        }
+    protected void Execute(ConnectCommand command, Session session) throws ServiceException {
+        String username = enter(command.getAuthToken(), command.getGameID(), session);
+        Notification notification = new Notification(username + " is now observing the game.");
+        connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), notification);
     }
 
     private String enter(String authToken, int gameID, Session session) throws ServiceException {

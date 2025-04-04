@@ -1,6 +1,7 @@
 package server.websocket;
 
 import com.google.gson.Gson;
+import model.response.result.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
@@ -16,10 +17,14 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
 
     protected abstract Class<T> GetCommandClass();
 
-    protected abstract void Execute(T command, Session session);
+    protected abstract void Execute(T command, Session session) throws ServiceException;
 
     public void handle(String message, Session session) {
-        Execute(deserialize(message, GetCommandClass()), session);
+        try {
+            Execute(deserialize(message, GetCommandClass()), session);
+        } catch (ServiceException e) {
+            sendError(session, e.getMessage());
+        }
     }
 
     protected void sendError(Session session, String message) {
