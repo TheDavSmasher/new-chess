@@ -27,24 +27,26 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         GameData gameData = checkPlayerGameState(command, username, "make a move");
 
         ChessGame game = gameData.game();
+        ChessMove move = command.getMove();
         try {
-            game.makeMove(command.getMove());
+            game.makeMove(move);
         } catch (InvalidMoveException e) {
             throw new ServiceException(e.getMessage());
         }
         GameService.updateGameState(command.getAuthToken(), command.getGameID(), serialize(game));
 
         connectionManager.loadNewGame(game, command.getGameID());
-        ChessMove move = command.getMove();
+
         notifyGame(command.getGameID(), command.getAuthToken(), username + " has moved piece at " +
                 positionAsString(move.getStartPosition()) + " to " + positionAsString(move.getEndPosition()) + ".");
 
-        String opponent = (game.getTeamTurn() == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
-        if (game.isInCheckmate(game.getTeamTurn())) {
-            endGame(command.getGameID(), command.getAuthToken(), game, opponent + " is now in checkmate.\n" + username + " has won.");
-        } else if (game.isInStalemate(game.getTeamTurn())) {
-            endGame(command.getGameID(), command.getAuthToken(), game, opponent + " is now in stalemate.\nThe game is tied.");
-        } else if (game.isInCheck(game.getTeamTurn())) {
+        ChessGame.TeamColor currentTurn = game.getTeamTurn();
+        String opponent = (currentTurn == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
+        if (game.isInCheckmate(currentTurn)) {
+            endGame(command, game, opponent + " is now in checkmate.\n" + username + " has won.");
+        } else if (game.isInStalemate(currentTurn)) {
+            endGame(command, game, opponent + " is now in stalemate.\nThe game is tied.");
+        } else if (game.isInCheck(currentTurn)) {
             notifyGame(command.getGameID(), opponent + " is now in check.");
         }
     }
