@@ -1,7 +1,6 @@
 package server.websocket.commands;
 
 import chess.ChessGame;
-import model.dataaccess.GameData;
 import model.response.result.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import server.websocket.ConnectionManager;
