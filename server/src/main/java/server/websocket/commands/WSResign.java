@@ -12,12 +12,12 @@ public class WSResign extends WSChessCommand<ResignCommand> {
     }
 
     @Override
-    protected Class<ResignCommand> GetCommandClass() {
+    protected Class<ResignCommand> getCommandClass() {
         return ResignCommand.class;
     }
 
     @Override
-    protected void Execute(ResignCommand command, Session session) throws ServiceException {
+    protected void execute(ResignCommand command, Session session) throws ServiceException {
         String username = CheckConnection(command.getAuthToken());
         ChessGame game = CheckPlayerGameState(command, username, "resign").game();
         endGame(command.getGameID(), command.getAuthToken(), game, username + " has resigned the game.");

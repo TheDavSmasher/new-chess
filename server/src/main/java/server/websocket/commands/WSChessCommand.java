@@ -25,10 +25,8 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
 
     protected void endGame(int gameID, String authToken, ChessGame game, String gameState) throws ServiceException {
         game.endGame();
-        String gameJson = serialize(game);
-        GameService.updateGameState(authToken, gameID, gameJson);
-        Notification gameEnded = new Notification("The game has ended.\n" + gameState);
-        connectionManager.notifyAll(gameID, gameEnded);
+        GameService.updateGameState(authToken, gameID, serialize(game));
+        notifyGame(gameID, "The game has ended.\n" + gameState);
     }
 
     protected String CheckConnection(String authToken) throws ServiceException {

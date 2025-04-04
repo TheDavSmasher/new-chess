@@ -5,7 +5,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import server.websocket.ConnectionManager;
 import service.GameService;
 import websocket.commands.LeaveCommand;
-import websocket.messages.Notification;
 
 public class WSLeave extends WSChessCommand<LeaveCommand> {
     public WSLeave(ConnectionManager connectionManager) {
@@ -13,16 +12,15 @@ public class WSLeave extends WSChessCommand<LeaveCommand> {
     }
 
     @Override
-    protected Class<LeaveCommand> GetCommandClass() {
+    protected Class<LeaveCommand> getCommandClass() {
         return LeaveCommand.class;
     }
 
     @Override
-    protected void Execute(LeaveCommand command, Session session) throws ServiceException {
+    protected void execute(LeaveCommand command, Session session) throws ServiceException {
         String username = CheckConnection(command.getAuthToken());
         GameService.leaveGame(command.getAuthToken(), command.getGameID());
         connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
-        Notification notification = new Notification(username + " has left the game.");
-        connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), notification);
+        notifyGame(command.getGameID(), command.getAuthToken(), username + " has left the game.");
     }
 }

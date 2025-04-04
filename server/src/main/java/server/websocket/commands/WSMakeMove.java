@@ -10,7 +10,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import server.websocket.ConnectionManager;
 import service.GameService;
 import websocket.commands.MakeMoveCommand;
-import websocket.messages.Notification;
 
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     public WSMakeMove(ConnectionManager connectionManager) {
@@ -18,12 +17,12 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     }
 
     @Override
-    protected Class<MakeMoveCommand> GetCommandClass() {
+    protected Class<MakeMoveCommand> getCommandClass() {
         return MakeMoveCommand.class;
     }
 
     @Override
-    protected void Execute(MakeMoveCommand command, Session session) throws ServiceException {
+    protected void execute(MakeMoveCommand command, Session session) throws ServiceException {
         String username = CheckConnection(command.getAuthToken());
         GameData gameData = CheckPlayerGameState(command, username, "make a move");
 
@@ -40,9 +39,8 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
 
         connectionManager.loadNewGame(game, command.getGameID());
         ChessMove move = command.getMove();
-        Notification moveNotification = new Notification(username + " has moved piece at " +
+        notifyGame(command.getGameID(), command.getAuthToken(), username + " has moved piece at " +
                 positionAsString(move.getStartPosition()) + " to " + positionAsString(move.getEndPosition()) + ".");
-        connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), moveNotification);
 
         String opponent = (game.getTeamTurn() == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
         if (game.isInCheckmate(game.getTeamTurn())) {
@@ -50,8 +48,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         } else if (game.isInStalemate(game.getTeamTurn())) {
             endGame(command.getGameID(), command.getAuthToken(), game, opponent + " is now in stalemate.\nThe game is tied.");
         } else if (game.isInCheck(game.getTeamTurn())) {
-            Notification checkNotification = new Notification(opponent + " is now in check.");
-            connectionManager.notifyOthers(command.getGameID(), command.getAuthToken(), checkNotification);
+            notifyGame(command.getGameID(), command.getAuthToken(), opponent + " is now in check.");
         }
     }
 
