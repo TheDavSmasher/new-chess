@@ -35,7 +35,7 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
     }
 
     protected GameData checkPlayerGameState(UserGameCommand command, String username, String description) throws ServiceException {
-        boolean checkColor = description.equals("resign");
+        boolean checkColor = !description.equals("resign");
         GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
         if (!gameData.game().gameInPlay()) {
             throw new ServiceException("Game is already finished. You cannot " + description + " anymore.");
