@@ -38,4 +38,15 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         }
         return connection.username;
     }
+
+    protected GameData CheckPlayerGameState(UserGameCommand command, String username, String description) throws ServiceException {
+        GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
+        if (!gameData.game().gameInPlay()) {
+            throw new ServiceException("Game is already finished. You cannot " + description + " anymore.");
+        }
+        if (userIsPlayer(gameData, username) == null) {
+            throw new ServiceException("You need to be a player to " + description + ".");
+        }
+        return gameData;
+    }
 }

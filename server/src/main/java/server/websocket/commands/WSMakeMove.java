@@ -26,11 +26,8 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     protected void Execute(MakeMoveCommand command, Session session) {
         try {
             String username = CheckConnection(command.getAuthToken());
-            GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
-            if (userIsPlayer(gameData, username) == null) {
-                sendError(session, "You need to be a player to make a move");
-                return;
-            }
+            GameData gameData = CheckPlayerGameState(command, username, "make a move");
+
             ChessGame game = gameData.game();
             if (userIsPlayer(gameData, username) != game.getTeamTurn()) {
                 sendError(session, "It is not your turn to make a move.");

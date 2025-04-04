@@ -21,15 +21,7 @@ public class WSResign extends WSChessCommand<ResignCommand> {
     protected void Execute(ResignCommand command, Session session) {
         try {
             String username = CheckConnection(command.getAuthToken());
-            GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
-            if (!gameData.game().gameInPlay()) {
-                sendError(session, "Game is already finished. You cannot resign anymore.");
-                return;
-            }
-            if (userIsPlayer(gameData, username) == null) {
-                sendError(session, "You need to be a player to resign.");
-                return;
-            }
+            GameData gameData = CheckPlayerGameState(command, username, "resign");
             GameService.leaveGame(command.getAuthToken(), command.getGameID());
             endGame(command.getGameID(), command.getAuthToken(), gameData.game(), username + " has resigned the game.");
             connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());
