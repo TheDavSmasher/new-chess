@@ -27,6 +27,10 @@ public class WSServer {
         return gson.fromJson(json, type);
     }
 
+    private static String serialize(Object object) {
+        return gson.toJson(object);
+    }
+
     private static final String UNAUTHORIZED = "You are unauthorized.";
 
     @OnWebSocketMessage
@@ -79,7 +83,7 @@ public class WSServer {
                 return;
             }
             game.makeMove(command.getMove());
-            String gameJson = new Gson().toJson(game);
+            String gameJson = serialize(game);
             GameService.updateGameState(command.getAuthToken(), command.getGameID(), gameJson);
 
             connectionManager.loadNewGame(game, command.getGameID());
@@ -166,7 +170,7 @@ public class WSServer {
 
     private void endGame(int gameID, String authToken, ChessGame game, String gameState) throws ServiceException {
         game.endGame();
-        String gameJson = new Gson().toJson(game);
+        String gameJson = serialize(game);
         GameService.updateGameState(authToken, gameID, gameJson);
         Notification gameEnded = new Notification("The game has ended.\n" + gameState);
         connectionManager.notifyAll(gameID, gameEnded);
@@ -175,7 +179,7 @@ public class WSServer {
     private void sendError(Session session, String message) {
         try {
             ErrorMessage error = new ErrorMessage(message);
-            session.getRemote().sendString(new Gson().toJson(error));
+            session.getRemote().sendString(serialize(error));
         } catch (IOException ignored) {}
     }
 }
