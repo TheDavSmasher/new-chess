@@ -48,7 +48,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         } else if (game.isInStalemate(game.getTeamTurn())) {
             endGame(command.getGameID(), command.getAuthToken(), game, opponent + " is now in stalemate.\nThe game is tied.");
         } else if (game.isInCheck(game.getTeamTurn())) {
-            notifyGame(command.getGameID(), command.getAuthToken(), opponent + " is now in check.");
+            notifyGame(command.getGameID(), opponent + " is now in check.");
         }
     }
 
