@@ -24,12 +24,9 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     @Override
     protected void execute(MakeMoveCommand command, Session session) throws ServiceException {
         String username = CheckConnection(command.getAuthToken());
-        GameData gameData = CheckPlayerGameState(command, username, "make a move");
+        GameData gameData = checkPlayerGameState(command, username, "make a move");
 
         ChessGame game = gameData.game();
-        if (userIsPlayer(gameData, username) != game.getTeamTurn()) {
-            throw new ServiceException("It is not your turn to make a move.");
-        }
         try {
             game.makeMove(command.getMove());
         } catch (InvalidMoveException e) {
