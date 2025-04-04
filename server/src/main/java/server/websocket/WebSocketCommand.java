@@ -2,10 +2,6 @@ package server.websocket;
 
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
-import server.websocket.commands.WSConnect;
-import server.websocket.commands.WSLeave;
-import server.websocket.commands.WSMakeMove;
-import server.websocket.commands.WSResign;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 
