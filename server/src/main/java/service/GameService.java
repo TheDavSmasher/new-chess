@@ -63,7 +63,8 @@ public class GameService extends Service {
             if (gameID <= 0 || oldGame == null) {
                 throw new BadRequestException();
             }
-
+            //If game is over, keep names for legacy
+            if (!oldGame.game().gameInPlay()) return;
             if (oldGame.whiteUsername() != null && oldGame.whiteUsername().equals(auth.username())) {
                 gameDAO.updateGamePlayer(gameID, "WHITE", null);
             } else if (oldGame.blackUsername() != null && oldGame.blackUsername().equals(auth.username())) {
