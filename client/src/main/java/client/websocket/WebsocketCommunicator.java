@@ -49,26 +49,22 @@ public class WebsocketCommunicator extends Endpoint {
     }
 
     public void connectToGame(String authToken, int gameID) throws IOException {
-        ConnectCommand command = new ConnectCommand(authToken, gameID);
-        sendCommand(new Gson().toJson(command));
+        sendCommand(new ConnectCommand(authToken, gameID));
     }
 
     public void makeMove(String authToken, int gameID, ChessMove move) throws IOException {
-        MakeMoveCommand command = new MakeMoveCommand(authToken, gameID, move);
-        sendCommand(new Gson().toJson(command));
+        sendCommand(new MakeMoveCommand(authToken, gameID, move));
     }
 
     public void leaveGame(String authToken, int gameID) throws IOException {
-        LeaveCommand command = new LeaveCommand(authToken, gameID);
-        sendCommand(new Gson().toJson(command));
+        sendCommand(new LeaveCommand(authToken, gameID));
     }
 
     public void resignGame(String authToken, int gameID) throws IOException {
-        ResignCommand command = new ResignCommand(authToken, gameID);
-        sendCommand(new Gson().toJson(command));
+        sendCommand(new ResignCommand(authToken, gameID));
     }
 
-    private void sendCommand(String jsonMessage) throws IOException {
-        session.getBasicRemote().sendText(jsonMessage);
+    private void sendCommand(UserGameCommand command) throws IOException {
+        session.getBasicRemote().sendText(new Gson().toJson(command));
     }
 }
