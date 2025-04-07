@@ -3,10 +3,7 @@ package server.websocket;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import server.websocket.commands.WSConnect;
-import server.websocket.commands.WSLeave;
-import server.websocket.commands.WSMakeMove;
-import server.websocket.commands.WSResign;
+import server.websocket.commands.*;
 import websocket.commands.*;
 
 import static server.websocket.WebSocketCommand.deserialize;
