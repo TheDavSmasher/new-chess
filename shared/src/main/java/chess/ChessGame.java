@@ -61,9 +61,9 @@ public class ChessGame {
 
     public enum CheckState {
         NONE,
+        STALEMATE,
         CHECK,
-        CHECKMATE,
-        STALEMATE
+        CHECKMATE
     }
 
     /**
