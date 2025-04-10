@@ -136,7 +136,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        return getCheckState(teamColor) == CheckState.CHECK;
+        return isInCheckTest(teamColor, gameBoard);
     }
 
     /**
@@ -161,7 +161,7 @@ public class ChessGame {
     }
 
     public CheckState getCheckState(TeamColor teamColor) {
-        boolean isInCheck = isInCheckTest(teamColor, gameBoard);
+        boolean isInCheck = isInCheck(teamColor);
         boolean hasNoMoves = allPossibleValidMoves(teamColor).isEmpty();
 
         if (isInCheck) {
