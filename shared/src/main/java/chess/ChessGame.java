@@ -139,17 +139,6 @@ public class ChessGame {
         return getCheckState(teamColor) == CheckState.CHECK;
     }
 
-    private boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
-        Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(getOtherTeam(teamColor), board);
-        for (ChessMove move : allOpposingMoves) {
-            ChessPiece temp = board.getPiece(move.getEndPosition());
-            if (temp != null && temp.getTeamColor() == teamColor && temp.getPieceType() == ChessPiece.PieceType.KING) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Determines if the given team is in checkmate
      *
@@ -183,6 +172,17 @@ public class ChessGame {
         if (hasNoMoves)
             return CheckState.STALEMATE;
         return CheckState.NONE;
+    }
+
+    private boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
+        Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(getOtherTeam(teamColor), board);
+        for (ChessMove move : allOpposingMoves) {
+            ChessPiece temp = board.getPiece(move.getEndPosition());
+            if (temp != null && temp.getTeamColor() == teamColor && temp.getPieceType() == ChessPiece.PieceType.KING) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {
