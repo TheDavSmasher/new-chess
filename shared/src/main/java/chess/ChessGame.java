@@ -21,7 +21,7 @@ public class ChessGame {
         inPlay = true;
     }
 
-    public boolean gameInPlay() { return inPlay; }
+    public boolean isGameOver() { return !inPlay; }
     public void endGame() { inPlay = false; }
 
     /**
