@@ -1,5 +1,6 @@
 package server.websocket;
 
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import model.response.result.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
@@ -18,14 +19,14 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
 
     protected abstract Class<T> getCommandClass();
 
-    protected abstract void execute(T command, Session session) throws ServiceException;
+    protected abstract void execute(T command, Session session) throws ServiceException, InvalidMoveException;
 
     public void handle(String message, Session session) {
         try {
             execute(deserialize(message, getCommandClass()), session);
-        } catch (ServiceException e) {
+        } catch (ServiceException | InvalidMoveException e) {
             try {
-                ErrorMessage error = new ErrorMessage(message);
+                ErrorMessage error = new ErrorMessage(e.getMessage());
                 session.getRemote().sendString(serialize(error));
             } catch (IOException ignored) {}
         }

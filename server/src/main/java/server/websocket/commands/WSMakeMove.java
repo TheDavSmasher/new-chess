@@ -22,17 +22,13 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     }
 
     @Override
-    protected void execute(MakeMoveCommand command, Session session) throws ServiceException {
+    protected void execute(MakeMoveCommand command, Session session) throws ServiceException, InvalidMoveException {
         String username = CheckConnection(command.getAuthToken());
         GameData gameData = checkPlayerGameState(command, username, "make a move");
 
         ChessGame game = gameData.game();
         ChessMove move = command.getMove();
-        try {
-            game.makeMove(move);
-        } catch (InvalidMoveException e) {
-            throw new ServiceException(e.getMessage());
-        }
+        game.makeMove(move);
         GameService.updateGameState(command.getAuthToken(), command.getGameID(), serialize(game));
 
         connectionManager.loadNewGame(game, command.getGameID());
