@@ -50,18 +50,6 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     }
 
     private String positionAsString(ChessPosition position) {
-        String end = "";
-        switch (position.getColumn()) {
-            case 1 -> end += "A";
-            case 2 -> end += "B";
-            case 3 -> end += "C";
-            case 4 -> end += "D";
-            case 5 -> end += "E";
-            case 6 -> end += "F";
-            case 7 -> end += "G";
-            default -> end += "H";
-        }
-        end += position.getRow();
-        return end;
+        return String.valueOf('A' + position.getColumn() - 1) + (position.getRow() - 1);
     }
 }
