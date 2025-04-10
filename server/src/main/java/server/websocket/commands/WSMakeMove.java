@@ -37,12 +37,16 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
                 positionAsString(move.getStartPosition()) + " to " + positionAsString(move.getEndPosition()) + ".");
 
         ChessGame.TeamColor currentTurn = game.getTeamTurn();
+        ChessGame.CheckState state = game.getCheckState(currentTurn);
+        if (state == ChessGame.CheckState.NONE) return;
+
         String opponent = (currentTurn == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
-        switch (game.getCheckState(currentTurn)) {
-            case CHECKMATE -> endGame(command, game, opponent + " is now in checkmate.\n" + username + " has won.");
-            case STALEMATE -> endGame(command, game, opponent + " is now in stalemate.\nThe game is tied.");
-            case CHECK -> notifyGame(command.getGameID(), opponent + " is now in check.");
+        String message = opponent + " is now in " + state.name().toLowerCase() + ".";
+        if (state != ChessGame.CheckState.CHECK) {
+            message = endGame(command, game) + message + "\n";
+            message += state == ChessGame.CheckState.STALEMATE ? "The game is tied." : username + " has won.";
         }
+        notifyGame(command.getGameID(), message);
     }
 
     private String positionAsString(ChessPosition position) {

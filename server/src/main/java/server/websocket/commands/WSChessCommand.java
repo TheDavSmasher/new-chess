@@ -16,10 +16,10 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         super(connectionManager);
     }
 
-    protected void endGame(UserGameCommand command, ChessGame game, String gameState) throws ServiceException {
+    protected String endGame(UserGameCommand command, ChessGame game) throws ServiceException {
         game.endGame();
         GameService.updateGameState(command.getAuthToken(), command.getGameID(), serialize(game));
-        notifyGame(command.getGameID(), "The game has ended.\n" + gameState);
+        return "The game has ended.\n";
     }
 
     protected String CheckConnection(String authToken) throws ServiceException {

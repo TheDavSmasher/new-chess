@@ -20,6 +20,6 @@ public class WSResign extends WSChessCommand<ResignCommand> {
     protected void execute(ResignCommand command, Session session) throws ServiceException {
         String username = CheckConnection(command.getAuthToken());
         ChessGame game = checkPlayerGameState(command, username).game();
-        endGame(command, game, username + " has resigned the game.");
+        notifyGame(command.getGameID(), endGame(command, game) + username + " has resigned the game.");
     }
 }
