@@ -59,6 +59,13 @@ public class ChessGame {
         BLACK
     }
 
+    public enum CheckState {
+        NONE,
+        CHECK,
+        CHECKMATE,
+        STALEMATE
+    }
+
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -129,7 +136,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        return isInCheckTest(teamColor, gameBoard);
+        return getCheckState(teamColor) == CheckState.CHECK;
     }
 
     private boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
@@ -150,7 +157,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        return isInCheck(teamColor) && allPossibleValidMoves(teamColor).isEmpty();
+        return getCheckState(teamColor) == CheckState.CHECKMATE;
     }
 
     /**
@@ -161,7 +168,21 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        return !isInCheck(teamColor) && allPossibleValidMoves(teamColor).isEmpty();
+        return getCheckState(teamColor) == CheckState.STALEMATE;
+    }
+
+    public CheckState getCheckState(TeamColor teamColor) {
+        boolean isInCheck = isInCheckTest(teamColor, gameBoard);
+        boolean hasNoMoves = allPossibleValidMoves(teamColor).isEmpty();
+
+        if (isInCheck) {
+            if (hasNoMoves)
+                return CheckState.CHECKMATE;
+            return CheckState.CHECK;
+        }
+        if (hasNoMoves)
+            return CheckState.STALEMATE;
+        return CheckState.NONE;
     }
 
     private Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {
