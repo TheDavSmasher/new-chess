@@ -22,7 +22,7 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         if (connection == null) {
             throw new ServiceException(UNAUTHORIZED);
         }
-        return connection.username;
+        return connection.username();
     }
 
     protected GameData checkPlayerGameState(UserGameCommand command, String username, String description) throws ServiceException {
