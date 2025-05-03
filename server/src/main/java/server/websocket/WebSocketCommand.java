@@ -40,10 +40,6 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
     //region Gson
     private static final Gson gson = new Gson();
 
-    public static UserGameCommand deserialize(String json) {
-        return deserialize(json, UserGameCommand.class);
-    }
-
     protected static <T> T deserialize(String json, Class<T> type) {
         return gson.fromJson(json, type);
     }

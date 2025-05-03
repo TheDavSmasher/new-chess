@@ -6,13 +6,11 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import server.websocket.commands.*;
 import websocket.commands.*;
 
-import static server.websocket.WebSocketCommand.deserialize;
-
 @WebSocket
 public class WSServer {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
-        UserGameCommand gameCommand = deserialize(message);
+        UserGameCommand gameCommand = WebSocketCommand.deserialize(message, UserGameCommand.class);
         (switch (gameCommand.getCommandType()) {
             case CONNECT -> new WSConnect();
             case MAKE_MOVE -> new WSMakeMove();
