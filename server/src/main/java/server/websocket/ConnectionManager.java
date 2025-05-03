@@ -15,21 +15,13 @@ public class ConnectionManager {
     private final ConcurrentHashMap<String, Connection> userConnections = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, ArrayList<Connection>> connectionsToGames = new ConcurrentHashMap<>();
 
-    private void addToUsers(String authToken, Connection connection) {
-        userConnections.put(authToken, connection);
-    }
-
-    private void removeFromUser(String authToken) {
-        userConnections.remove(authToken);
-    }
-
     public void addToGame(GameData gameData, String authToken, String username, Session session) {
         Connection newConnection = new Connection(username, session);
         if (!connectionsToGames.containsKey(gameData.gameID())) {
             connectionsToGames.put(gameData.gameID(), new ArrayList<>());
         }
         connectionsToGames.get(gameData.gameID()).add(newConnection);
-        addToUsers(authToken, newConnection);
+        userConnections.put(authToken, newConnection);
 
         sendToConnection(userConnections.get(authToken), getGameString(gameData.game()));
     }
@@ -38,7 +30,7 @@ public class ConnectionManager {
         ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
         gameConnections.remove(getFromUsers(authToken));
         connectionsToGames.put(gameID, gameConnections);
-        removeFromUser(authToken);
+        userConnections.remove(authToken);
     }
 
     public Connection getFromUsers(String authToken) {
