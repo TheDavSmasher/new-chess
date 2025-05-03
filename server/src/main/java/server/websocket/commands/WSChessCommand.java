@@ -25,10 +25,6 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         return connection.username;
     }
 
-    protected GameData checkPlayerGameState(UserGameCommand command, String username) throws ServiceException {
-        return checkPlayerGameState(command, username, "resign");
-    }
-
     protected GameData checkPlayerGameState(UserGameCommand command, String username, String description) throws ServiceException {
         boolean checkColor = !description.equals("resign");
         GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
