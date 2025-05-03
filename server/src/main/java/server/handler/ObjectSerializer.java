@@ -26,11 +26,11 @@ public abstract class ObjectSerializer<T> implements Route {
 
     protected abstract T serviceHandle(Request request) throws ServiceException;
 
-    protected String getAuthToken(Request request) {
+    protected static String getAuthToken(Request request) {
         return request.headers("authorization");
     }
 
-    private int getStatusCode(ServiceException e) {
+    private static int getStatusCode(ServiceException e) {
         return switch (e) {
             case BadRequestException ignore -> 400;
             case UnauthorizedException ignore -> 401;
