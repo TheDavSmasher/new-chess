@@ -12,10 +12,6 @@ import service.GameService;
 import websocket.commands.MakeMoveCommand;
 
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
-    public WSMakeMove(ConnectionManager connectionManager) {
-        super(connectionManager);
-    }
-
     @Override
     protected Class<MakeMoveCommand> getCommandClass() {
         return MakeMoveCommand.class;

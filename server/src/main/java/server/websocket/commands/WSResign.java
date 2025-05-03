@@ -7,10 +7,6 @@ import server.websocket.ConnectionManager;
 import websocket.commands.ResignCommand;
 
 public class WSResign extends WSChessCommand<ResignCommand> {
-    public WSResign(ConnectionManager connectionManager) {
-        super(connectionManager);
-    }
-
     @Override
     protected Class<ResignCommand> getCommandClass() {
         return ResignCommand.class;

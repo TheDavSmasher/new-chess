@@ -10,16 +10,14 @@ import static server.websocket.WebSocketCommand.deserialize;
 
 @WebSocket
 public class WSServer {
-    private final ConnectionManager connectionManager = new ConnectionManager();
-
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
         UserGameCommand gameCommand = deserialize(message);
         (switch (gameCommand.getCommandType()) {
-            case CONNECT -> new WSConnect(connectionManager);
-            case MAKE_MOVE -> new WSMakeMove(connectionManager);
-            case LEAVE -> new WSLeave(connectionManager);
-            case RESIGN -> new WSResign(connectionManager);
+            case CONNECT -> new WSConnect();
+            case MAKE_MOVE -> new WSMakeMove();
+            case LEAVE -> new WSLeave();
+            case RESIGN -> new WSResign();
         }).handle(message, session);
     }
 }

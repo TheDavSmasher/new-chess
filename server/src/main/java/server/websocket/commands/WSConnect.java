@@ -11,10 +11,6 @@ import service.UserService;
 import websocket.commands.ConnectCommand;
 
 public class WSConnect extends WebSocketCommand<ConnectCommand> {
-    public WSConnect(ConnectionManager connectionManager) {
-        super(connectionManager);
-    }
-
     @Override
     protected Class<ConnectCommand> getCommandClass() {
         return ConnectCommand.class;

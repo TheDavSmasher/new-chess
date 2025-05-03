@@ -11,11 +11,7 @@ import websocket.messages.Notification;
 import java.io.IOException;
 
 public abstract class WebSocketCommand<T extends UserGameCommand> {
-    protected final ConnectionManager connectionManager;
-
-    protected WebSocketCommand(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
-    }
+    protected static final ConnectionManager connectionManager = new ConnectionManager();
 
     protected abstract Class<T> getCommandClass();
 

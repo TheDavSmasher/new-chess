@@ -7,10 +7,6 @@ import service.GameService;
 import websocket.commands.LeaveCommand;
 
 public class WSLeave extends WSChessCommand<LeaveCommand> {
-    public WSLeave(ConnectionManager connectionManager) {
-        super(connectionManager);
-    }
-
     @Override
     protected Class<LeaveCommand> getCommandClass() {
         return LeaveCommand.class;

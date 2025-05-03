@@ -12,10 +12,6 @@ import websocket.commands.UserGameCommand;
 public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocketCommand<T> {
     protected static final String UNAUTHORIZED = "You are unauthorized.";
 
-    protected WSChessCommand(ConnectionManager connectionManager) {
-        super(connectionManager);
-    }
-
     protected String endGame(UserGameCommand command, ChessGame game) throws ServiceException {
         game.endGame();
         GameService.updateGameState(command.getAuthToken(), command.getGameID(), serialize(game));
