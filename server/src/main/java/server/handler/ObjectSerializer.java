@@ -15,9 +15,10 @@ public abstract class ObjectSerializer<T> implements Route {
 
     public String handle(Request request, Response response) {
         response.type("application/json");
+        response.status(200);
         try {
             T serviceResponse = serviceHandle(request);
-            response.status(200);
+
             return gson.toJson(serviceResponse);
         } catch (ServiceException e) {
             throw Spark.halt(getStatusCode(e), "{ \"message\": \"Error: " + e.getMessage() + "\" }");
