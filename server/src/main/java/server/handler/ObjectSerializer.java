@@ -1,6 +1,6 @@
 package server.handler;
 
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import model.response.result.BadRequestException;
 import model.response.result.PreexistingException;
 import model.response.result.ServiceException;
@@ -11,14 +11,12 @@ import spark.Route;
 import spark.Spark;
 
 public abstract class ObjectSerializer<T> implements Route {
-    protected final Gson gson = new Gson();
-
     public String handle(Request request, Response response) {
         response.type("application/json");
         response.status(200);
         try {
             T serviceResponse = serviceHandle(request);
-            return gson.toJson(serviceResponse);
+            return serialize(serviceResponse);
         } catch (ServiceException e) {
             throw Spark.halt(getStatusCode(e), "{ \"message\": \"Error: " + e.getMessage() + "\" }");
         }

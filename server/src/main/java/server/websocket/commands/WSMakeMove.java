@@ -10,6 +10,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
 import websocket.commands.MakeMoveCommand;
 
+import static model.Serializer.*;
+
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     @Override
     protected Class<MakeMoveCommand> getCommandClass() {

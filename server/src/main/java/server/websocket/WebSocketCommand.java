@@ -1,7 +1,7 @@
 package server.websocket;
 
 import chess.InvalidMoveException;
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import model.response.result.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
@@ -36,16 +36,4 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
         Notification notification = new Notification(message);
         connectionManager.notifyGame(gameID, notification, authToken);
     }
-
-    //region Gson
-    private static final Gson gson = new Gson();
-
-    protected static <T> T deserialize(String json, Class<T> type) {
-        return gson.fromJson(json, type);
-    }
-
-    protected static String serialize(Object object) {
-        return gson.toJson(object);
-    }
-    //endregion
 }

@@ -1,6 +1,7 @@
 package server.websocket.commands;
 
 import chess.ChessGame;
+import static model.Serializer.*;
 import model.dataaccess.GameData;
 import model.response.result.ServiceException;
 import server.websocket.Connection;

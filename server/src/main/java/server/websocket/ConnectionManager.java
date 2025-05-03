@@ -1,7 +1,7 @@
 package server.websocket;
 
 import chess.ChessGame;
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import model.dataaccess.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.LoadGameMessage;
@@ -49,9 +49,8 @@ public class ConnectionManager {
     }
 
     private String getGameString(ChessGame game) {
-        Gson gson = new Gson();
-        String gameJson = gson.toJson(game);
-        return gson.toJson(new LoadGameMessage(gameJson));
+        String gameJson = serialize(game);
+        return serialize(new LoadGameMessage(gameJson));
     }
 
     public void notifyGame(int gameID, Notification notification, String authToken) {
@@ -60,7 +59,7 @@ public class ConnectionManager {
         if (gameConnections == null) return;
         if (authToken == null) authToken = "";
 
-        String message = new Gson().toJson(notification);
+        String message = serialize(notification);
         for (Connection current : gameConnections) {
             if (!current.isOpen()) {
                 closed.add(current);

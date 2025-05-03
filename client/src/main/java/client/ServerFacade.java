@@ -3,7 +3,7 @@ package client;
 import chess.ChessMove;
 import client.websocket.ServerMessageObserver;
 import client.websocket.WebsocketCommunicator;
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import model.dataaccess.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
@@ -83,9 +83,5 @@ public class ServerFacade {
 
     public static void resignGame(String authToken, int gameID) throws IOException {
         websocket.resignGame(authToken, gameID);
-    }
-
-    private static String serialize(Object data) {
-        return new Gson().toJson(data);
     }
 }

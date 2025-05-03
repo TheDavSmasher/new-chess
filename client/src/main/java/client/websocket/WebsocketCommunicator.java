@@ -1,7 +1,7 @@
 package client.websocket;
 
 import chess.ChessMove;
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import websocket.messages.*;
 import websocket.commands.*;
 
@@ -27,12 +27,13 @@ public class WebsocketCommunicator extends Endpoint {
                 @Override
                 public void onMessage(String message) {
                     try {
-                        Gson gson = new Gson();
-                        switch (gson.fromJson(message, ServerMessage.class).getServerMessageType()) {
-                            case NOTIFICATION -> observer.notify(gson.fromJson(message, Notification.class));
-                            case LOAD_GAME -> observer.notify(gson.fromJson(message, LoadGameMessage.class));
-                            case ERROR -> observer.notify(gson.fromJson(message, ErrorMessage.class));
-                        }
+                        Class<? extends ServerMessage> messageClass =
+                                switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
+                            case NOTIFICATION -> Notification.class;
+                            case LOAD_GAME -> LoadGameMessage.class;
+                            case ERROR -> ErrorMessage.class;
+                        };
+                        observer.notify(deserialize(message, messageClass));
                     } catch (Exception e) {
                         observer.notify(new ErrorMessage(e.getMessage()));
                     }
@@ -65,6 +66,6 @@ public class WebsocketCommunicator extends Endpoint {
     }
 
     private void sendCommand(UserGameCommand command) throws IOException {
-        session.getBasicRemote().sendText(new Gson().toJson(command));
+        session.getBasicRemote().sendText(serialize(command));
     }
 }

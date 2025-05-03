@@ -5,7 +5,7 @@ import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import client.websocket.ServerMessageObserver;
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import model.dataaccess.GameData;
 import ui.ChessUI;
 import websocket.messages.ErrorMessage;
@@ -472,7 +472,7 @@ public class ChessClient implements ServerMessageObserver {
 
     private void loadGame(LoadGameMessage message) {
         String gameJson = message.getGame();
-        currentGame = new Gson().fromJson(gameJson, ChessGame.class);
+        currentGame = deserialize(gameJson, ChessGame.class);
         ChessUI.printChessBoard(out, ChessUI.getChessBoardAsArray(currentGame.getBoard()), whitePlayer);
         help(true);
     }

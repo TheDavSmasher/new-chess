@@ -1,7 +1,7 @@
 package dataaccess.sql;
 
 import chess.ChessGame;
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.dataaccess.GameData;
@@ -39,7 +39,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
             String black = rs.getString("blackUsername");
             String name = rs.getString("gameName");
             String gameJson = rs.getString("game");
-            ChessGame game = new Gson().fromJson(gameJson, ChessGame.class);
+            ChessGame game = deserialize(gameJson, ChessGame.class);
 
             return new GameData(id, white, black, name, game);
         }, gameID);
@@ -48,7 +48,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     @Override
     public GameData createGame(String gameName) throws DataAccessException {
         ChessGame game = new ChessGame();
-        String gameJson = new Gson().toJson(game);
+        String gameJson = serialize(game);
         AtomicInteger id = new AtomicInteger();
         tryUpdate("INSERT INTO games (gameName, game) VALUES (?, ?)", updateResKey -> {
             SQLDAO.confirmUpdate(updateResKey);

@@ -1,6 +1,6 @@
 package client;
 
-import com.google.gson.Gson;
+import static model.Serializer.*;
 import model.response.ErrorResponse;
 
 import java.io.*;
@@ -45,13 +45,13 @@ public class HttpCommunicator {
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             try (InputStream responseBody = connection.getInputStream()) {
                 reader = new InputStreamReader(responseBody);
-                return new Gson().fromJson(reader, responseClass);
+                return gson.fromJson(reader, responseClass);
             }
         } else {
             try (InputStream responseBody = connection.getErrorStream()) {
                 reader = new InputStreamReader(responseBody);
                 BufferedReader bufferedReader = new BufferedReader(reader);
-                ErrorResponse errorMessage = new Gson().fromJson(bufferedReader.readLine(), ErrorResponse.class);
+                ErrorResponse errorMessage = deserialize(bufferedReader.readLine(), ErrorResponse.class);
                 throw new IOException(errorMessage.message());
             }
         }
