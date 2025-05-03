@@ -26,17 +26,13 @@ public class WebsocketCommunicator extends Endpoint {
             session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    try {
-                        Class<? extends ServerMessage> messageClass =
-                                switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
-                            case NOTIFICATION -> Notification.class;
-                            case LOAD_GAME -> LoadGameMessage.class;
-                            case ERROR -> ErrorMessage.class;
-                        };
-                        observer.notify(deserialize(message, messageClass));
-                    } catch (Exception e) {
-                        observer.notify(new ErrorMessage(e.getMessage()));
-                    }
+                    Class<? extends ServerMessage> messageClass =
+                    switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
+                        case NOTIFICATION -> Notification.class;
+                        case LOAD_GAME -> LoadGameMessage.class;
+                        case ERROR -> ErrorMessage.class;
+                    };
+                    observer.notify(deserialize(message, messageClass));
                 }
             });
         } catch (DeploymentException | IOException e) {
