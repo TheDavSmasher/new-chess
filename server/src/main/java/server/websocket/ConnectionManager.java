@@ -62,7 +62,7 @@ public class ConnectionManager {
 
         String message = new Gson().toJson(notification);
         for (Connection current : gameConnections) {
-            if (!current.session.isOpen()) {
+            if (!current.isOpen()) {
                 closed.add(current);
                 continue;
             }
