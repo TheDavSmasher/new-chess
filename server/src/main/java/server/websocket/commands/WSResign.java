@@ -3,7 +3,6 @@ package server.websocket.commands;
 import chess.ChessGame;
 import model.response.result.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
-import server.websocket.ConnectionManager;
 import websocket.commands.ResignCommand;
 
 public class WSResign extends WSChessCommand<ResignCommand> {

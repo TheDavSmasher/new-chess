@@ -4,7 +4,6 @@ import model.dataaccess.AuthData;
 import model.dataaccess.GameData;
 import model.response.result.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
-import server.websocket.ConnectionManager;
 import server.websocket.WebSocketCommand;
 import service.GameService;
 import service.UserService;
