@@ -43,6 +43,7 @@ public class ChessMove {
     }
 
 
+    @Override
     public String toString() {
         String promotion = promotionPiece != null ? "(%s)".formatted(promotionPiece) : "";
         return "[%s -> %s]%s".formatted(startPosition, endPosition, promotion);
