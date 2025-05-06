@@ -38,27 +38,25 @@ public class ChessBoard implements Cloneable {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
+    private static final ChessPiece.PieceType[] PIECE_ORDER = {
+            ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN,
+            ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK
+    };
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
         board = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
+
         for (var team : ChessGame.TeamColor.values()) {
             int row = ChessGame.getTeamInitialRow(team) - 1;
-            
-            board[row][0] = new ChessPiece(team, ChessPiece.PieceType.ROOK);
-            board[row][1] = new ChessPiece(team, ChessPiece.PieceType.KNIGHT);
-            board[row][2] = new ChessPiece(team, ChessPiece.PieceType.BISHOP);
-            board[row][3] = new ChessPiece(team, ChessPiece.PieceType.QUEEN);
-            board[row][4] = new ChessPiece(team, ChessPiece.PieceType.KING);
-            board[row][5] = new ChessPiece(team, ChessPiece.PieceType.BISHOP);
-            board[row][6] = new ChessPiece(team, ChessPiece.PieceType.KNIGHT);
-            board[row][7] = new ChessPiece(team, ChessPiece.PieceType.ROOK);
+            int dir = ChessGame.getTeamDirection(team);
 
-            int second = row + ChessGame.getTeamDirection(team);
             for (int i = 0; i < BOARD_SIZE; i++) {
-                board[second][i] = new ChessPiece(team, ChessPiece.PieceType.PAWN);
+                board[row][i] = new ChessPiece(team, PIECE_ORDER[i]);
+                board[row + dir][i] = new ChessPiece(team, ChessPiece.PieceType.PAWN);
             }
         }
     }
