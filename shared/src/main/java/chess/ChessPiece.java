@@ -1,9 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
 
 /**
  * Represents a single chess piece
