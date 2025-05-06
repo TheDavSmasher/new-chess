@@ -44,7 +44,7 @@ public class ChessGame {
         setTeamTurn(getOtherTeam(currentTurn));
     }
 
-    private TeamColor getOtherTeam(TeamColor teamColor) {
+    public static TeamColor getOtherTeam(TeamColor teamColor) {
         if (teamColor == TeamColor.WHITE) {
             return TeamColor.BLACK;
         } else {
