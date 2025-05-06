@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import static chess.ChessMoveCalculator.*;
 
 /**
  * Represents a single chess piece
@@ -44,12 +45,12 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return switch (type) {
-            case BISHOP -> ChessMoveCalculator.getDiagonals(board, myPosition);
-            case ROOK -> ChessMoveCalculator.getCross(board, myPosition);
-            case QUEEN -> ChessMoveCalculator.getQueen(board, myPosition);
-            case KING -> ChessMoveCalculator.getKing(board, myPosition);
-            case KNIGHT -> ChessMoveCalculator.getKnight(board, myPosition);
-            case PAWN -> ChessMoveCalculator.getPawn(board, myPosition);
+            case BISHOP -> getDiagonals(board, myPosition);
+            case ROOK -> getCross(board, myPosition);
+            case QUEEN -> getQueen(board, myPosition);
+            case KING -> getKing(board, myPosition);
+            case KNIGHT -> getKnight(board, myPosition);
+            case PAWN -> getPawn(board, myPosition);
         };
     }
 
