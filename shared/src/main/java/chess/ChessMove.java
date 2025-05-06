@@ -46,18 +46,8 @@ public class ChessMove {
 
 
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append('[');
-        builder.append(startPosition);
-        builder.append(" -> ");
-        builder.append(endPosition);
-        if (promotionPiece != null) {
-            builder.append('(');
-            builder.append(promotionPiece);
-            builder.append(')');
-        }
-        builder.append(']');
-        return builder.toString();
+        String promotion = promotionPiece != null ? "(%s)".formatted(promotionPiece) : "";
+        return "[%s -> %s]%s".formatted(startPosition, endPosition, promotion);
     }
 
     @Override
