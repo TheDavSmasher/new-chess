@@ -39,6 +39,7 @@ public class ChessGame {
     public void setTeamTurn(TeamColor team) {
         currentTurn = team;
     }
+
     private void changeTurn() {
         setTeamTurn(getOtherTeam(currentTurn));
     }
@@ -49,6 +50,14 @@ public class ChessGame {
         } else {
             return TeamColor.WHITE;
         }
+    }
+
+    public static int getTeamDirection(TeamColor teamColor) {
+        return teamColor == TeamColor.WHITE ? 1 : -1;
+    }
+
+    public static int getTeamInitialRow(TeamColor color) {
+        return color == TeamColor.WHITE ? 1 : 8;
     }
 
     /**
