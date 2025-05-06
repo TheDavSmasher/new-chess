@@ -90,29 +90,28 @@ public class ChessMoveCalculator {
     }
 
     private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
-        Collection<ChessMove> endMoves = new ArrayList<>();
-        ChessGame.TeamColor color = board.getPiece(start).color();
+        int[][] offsets = new int[limit][];
         for (int i = 1; i <= limit; i++) {
-            ChessPosition temp = new ChessPosition(start.getRow() + (i * rowMod), start.getColumn() + (i * colMod));
-            ChessPiece atTemp = board.getPiece(temp);
-            if (atTemp == null || (atTemp.color() != color)) {
-                endMoves.add(new ChessMove(start, temp, null));
-            }
-            if (atTemp != null) { break; }
+            offsets[i - 1] = new int[] { i * rowMod, i * colMod };
         }
-        return endMoves;
+        return getMovesFromOffsets(board, start, offsets, false);
     }
 
     private static Collection<ChessMove> getMovesFromOffsets(ChessBoard board, ChessPosition start, int[][] offsets) {
+        return getMovesFromOffsets(board, start, offsets, true);
+    }
+
+    private static Collection<ChessMove> getMovesFromOffsets(ChessBoard board, ChessPosition start, int[][] offsets, boolean checkBounds) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
         for (int[] offset : offsets) {
             ChessPosition temp = new ChessPosition(start.getRow() + offset[0], start.getColumn() + offset[1]);
-            if (temp.outOfBounds()) continue;
+            if (checkBounds && temp.outOfBounds()) continue;
             ChessPiece atTemp = board.getPiece(temp);
             if (atTemp == null || (atTemp.color() != color)) {
                 endMoves.add(new ChessMove(start, temp, null));
             }
+            if (!checkBounds && atTemp != null) { break; }
         }
         return endMoves;
     }
