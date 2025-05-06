@@ -82,14 +82,14 @@ public class ChessMoveCalculator {
         int[][] offsets = {
                 {0, +1}, {0, -1}, {+1, 0}, {-1, 0}, {+1, +1}, {+1, -1}, {-1, -1}, {-1, +1}
         };
-        return new ArrayList<>(addMoveTemps(board, start, offsets));
+        return addMoveTemps(board, start, offsets);
     }
 
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
         int[][] offsets = {
                 {+2, +1}, {+1, +2}, {-2, +1}, {-1, +2}, {-2, -1}, {-1, -2}, {+2, -1}, {+1, -2}
         };
-        return new ArrayList<>(addMoveTemps(board, start, offsets));
+        return addMoveTemps(board, start, offsets);
     }
 
     private static Collection<ChessMove> addMoveList(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
