@@ -59,7 +59,7 @@ public class ChessMoveCalculator {
         int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(addMoveList(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
+            endMoves.addAll(getMovesFromList(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
         }
         return endMoves;
     }
@@ -73,7 +73,7 @@ public class ChessMoveCalculator {
         };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(addMoveList(board, start, limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
+            endMoves.addAll(getMovesFromList(board, start, limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
         }
         return endMoves;
     }
@@ -82,17 +82,17 @@ public class ChessMoveCalculator {
         int[][] offsets = {
                 {0, +1}, {0, -1}, {+1, 0}, {-1, 0}, {+1, +1}, {+1, -1}, {-1, -1}, {-1, +1}
         };
-        return addMoveTemps(board, start, offsets);
+        return getMovesFromOffsets(board, start, offsets);
     }
 
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
         int[][] offsets = {
                 {+2, +1}, {+1, +2}, {-2, +1}, {-1, +2}, {-2, -1}, {-1, -2}, {+2, -1}, {+1, -2}
         };
-        return addMoveTemps(board, start, offsets);
+        return getMovesFromOffsets(board, start, offsets);
     }
 
-    private static Collection<ChessMove> addMoveList(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
+    private static Collection<ChessMove> getMovesFromList(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
         for (int i = 1; i <= limit; i++) {
@@ -106,7 +106,7 @@ public class ChessMoveCalculator {
         return endMoves;
     }
 
-    private static Collection<ChessMove> addMoveTemps(ChessBoard board, ChessPosition start, int[][] offsets) {
+    private static Collection<ChessMove> getMovesFromOffsets(ChessBoard board, ChessPosition start, int[][] offsets) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
         for (int[] offset : offsets) {
