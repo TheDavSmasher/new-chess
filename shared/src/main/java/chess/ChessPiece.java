@@ -78,16 +78,15 @@ public class ChessPiece {
     }
 
     public String toString() {
-        String s = "";
-        switch (type) {
-            case BISHOP -> s = "b";
-            case KNIGHT -> s = "n";
-            case ROOK -> s = "r";
-            case KING -> s = "k";
-            case PAWN -> s = "p";
-            case QUEEN -> s = "q";
-        }
-        return (color == ChessGame.TeamColor.WHITE)? s.toUpperCase() : s;
+        String s = switch (type) {
+            case BISHOP -> "b";
+            case KNIGHT -> "n";
+            case ROOK -> "r";
+            case KING -> "k";
+            case PAWN -> "p";
+            case QUEEN ->"q";
+        };
+        return color == ChessGame.TeamColor.WHITE ? s.toUpperCase() : s;
     }
 
     private Collection<ChessMove> getQueen(ChessBoard board, ChessPosition myPosition) {
