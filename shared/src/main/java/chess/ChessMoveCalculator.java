@@ -59,7 +59,7 @@ public class ChessMoveCalculator {
         int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromList(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
+            endMoves.addAll(getMovesFromLimits(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
         }
         return endMoves;
     }
@@ -73,7 +73,7 @@ public class ChessMoveCalculator {
         };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromList(board, start, limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
+            endMoves.addAll(getMovesFromLimits(board, start, limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
         }
         return endMoves;
     }
@@ -88,7 +88,7 @@ public class ChessMoveCalculator {
         return getMovesFromOffsets(board, start, offsets);
     }
 
-    private static Collection<ChessMove> getMovesFromList(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
+    private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
         for (int i = 1; i <= limit; i++) {
