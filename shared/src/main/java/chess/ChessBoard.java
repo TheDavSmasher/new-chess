@@ -9,10 +9,11 @@ import java.util.Arrays;
  * signature of the existing methods.
  */
 public class ChessBoard implements Cloneable {
+    public static final int BOARD_SIZE = 8;
     private ChessPiece[][] board;
 
     public ChessBoard() {
-         board = new ChessPiece[8][8];
+         board = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
     }
 
     /**
@@ -50,7 +51,7 @@ public class ChessBoard implements Cloneable {
         board[0][5] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
         board[0][6] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
         board[0][7] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             board[1][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
             for (int j = 2; j < 6; j++) {
                 board[j][i] = null;
@@ -70,9 +71,9 @@ public class ChessBoard implements Cloneable {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("  1 2 3 4 5 6 7 8\n");
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             builder.append(i + 1);
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
                 builder.append('|');
                 if (board[i][j] != null) {
                     builder.append(board[i][j]);
@@ -103,7 +104,7 @@ public class ChessBoard implements Cloneable {
         try {
             ChessBoard clone = (ChessBoard) super.clone();
             clone.board = Arrays.copyOf(board, board.length);
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < BOARD_SIZE; i++) {
                 clone.board[i] = Arrays.copyOf(board[i], board[i].length);
             }
             return clone;
