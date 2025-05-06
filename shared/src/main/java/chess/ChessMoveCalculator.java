@@ -14,7 +14,7 @@ public class ChessMoveCalculator {
     public static Collection<ChessMove> getPawn(ChessBoard board, ChessPosition start) { //Fail: 10, 11
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
-        int pieceDirection = (color == ChessGame.TeamColor.BLACK ? -1 : 1);
+        int pieceDirection = ChessGame.getTeamDirection(color);
         ChessPiece atTemp;
         //Move Forward
         ChessPosition temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn());
@@ -42,7 +42,7 @@ public class ChessMoveCalculator {
     }
 
     private static void addPawnPromotionMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end, ChessGame.TeamColor color) {
-        if (end.getRow() == (color == ChessGame.TeamColor.BLACK ? 1 : 8)) {
+        if (end.getRow() == ChessGame.getTeamInitialRow(color)) {
             Collections.addAll(moves, new ChessMove(start, end, ChessPiece.PieceType.QUEEN), new ChessMove(start, end, ChessPiece.PieceType.ROOK), new ChessMove(start, end, ChessPiece.PieceType.BISHOP), new ChessMove(start, end, ChessPiece.PieceType.KNIGHT));
         } else {
             moves.add(new ChessMove(start, end, null));
