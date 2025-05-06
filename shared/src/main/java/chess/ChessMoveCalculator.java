@@ -50,11 +50,17 @@ public class ChessMoveCalculator {
     }
 
     public static Collection<ChessMove> getCross(ChessBoard board, ChessPosition start) {
+        int[] limits = {
+                8 - start.getColumn(),
+                start.getColumn() - 1,
+                8 - start.getRow(),
+                start.getRow() - 1
+        };
+        int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
-        endMoves.addAll(addMoveList(board, start, 8 - start.getColumn(), 0, +1));
-        endMoves.addAll(addMoveList(board, start, start.getColumn() - 1, 0, -1));
-        endMoves.addAll(addMoveList(board, start, 8 - start.getRow(), +1, 0));
-        endMoves.addAll(addMoveList(board, start, start.getRow() - 1, -1, 0));
+        for (int i = 0; i < 4; i++) {
+            endMoves.addAll(addMoveList(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
+        }
         return endMoves;
     }
 
