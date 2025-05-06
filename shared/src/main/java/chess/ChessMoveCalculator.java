@@ -79,16 +79,12 @@ public class ChessMoveCalculator {
     }
 
     public static Collection<ChessMove> getKing(ChessBoard board, ChessPosition start) {
-        int[][] offsets = {
-                {0, +1}, {0, -1}, {+1, 0}, {-1, 0}, {+1, +1}, {+1, -1}, {-1, -1}, {-1, +1}
-        };
+        int[][] offsets = { {0, +1}, {0, -1}, {+1, 0}, {-1, 0}, {+1, +1}, {+1, -1}, {-1, -1}, {-1, +1} };
         return getMovesFromOffsets(board, start, offsets);
     }
 
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
-        int[][] offsets = {
-                {+2, +1}, {+1, +2}, {-2, +1}, {-1, +2}, {-2, -1}, {-1, -2}, {+2, -1}, {+1, -2}
-        };
+        int[][] offsets = { {+2, +1}, {+1, +2}, {-2, +1}, {-1, +2}, {-2, -1}, {-1, -2}, {+2, -1}, {+1, -2} };
         return getMovesFromOffsets(board, start, offsets);
     }
 
