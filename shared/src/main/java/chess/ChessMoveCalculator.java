@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import static chess.ChessGame.*;
 
 public class ChessMoveCalculator {
     public static Collection<ChessMove> getQueen(ChessBoard board, ChessPosition myPosition) {
@@ -14,7 +15,7 @@ public class ChessMoveCalculator {
     public static Collection<ChessMove> getPawn(ChessBoard board, ChessPosition start) { //Fail: 10, 11
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
-        int pieceDirection = ChessGame.getTeamDirection(color);
+        int pieceDirection = getTeamDirection(color);
         ChessPiece atTemp;
         //Move Forward
         ChessPosition temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn());
@@ -42,7 +43,7 @@ public class ChessMoveCalculator {
     }
 
     private static void addPawnPromotionMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end, ChessGame.TeamColor color) {
-        if (end.getRow() == ChessGame.getTeamInitialRow(color)) {
+        if (end.getRow() == getTeamInitialRow(getOtherTeam(color))) {
             Collections.addAll(moves, new ChessMove(start, end, ChessPiece.PieceType.QUEEN), new ChessMove(start, end, ChessPiece.PieceType.ROOK), new ChessMove(start, end, ChessPiece.PieceType.BISHOP), new ChessMove(start, end, ChessPiece.PieceType.KNIGHT));
         } else {
             moves.add(new ChessMove(start, end, null));
