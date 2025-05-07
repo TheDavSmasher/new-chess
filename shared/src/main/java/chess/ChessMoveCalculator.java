@@ -72,9 +72,10 @@ public class ChessMoveCalculator {
                 Math.max(9 - start.getRow(), start.getColumn()),
                 Math.max(9 - start.getRow(), 9 - start.getColumn())
         };
+        int[] modifiers = { +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromLimits(board, start, limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
+            endMoves.addAll(getMovesFromLimits(board, start, limits[i], modifiers[Math.floorDiv(i, 2)], modifiers[i % 2]));
         }
         return endMoves;
     }
