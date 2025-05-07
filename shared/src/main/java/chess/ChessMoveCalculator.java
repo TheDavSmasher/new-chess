@@ -67,14 +67,14 @@ public class ChessMoveCalculator {
 
     public static Collection<ChessMove> getDiagonals(ChessBoard board, ChessPosition start) {
         int[] limits = {
-                8 - Math.max(start.getRow(), start.getColumn()),
-                8 - Math.max(start.getRow(), 9 - start.getColumn()),
-                8 - Math.max(9 - start.getRow(), start.getColumn()),
-                8 - Math.max(9 - start.getRow(), 9 - start.getColumn())
+                Math.max(start.getRow(), start.getColumn()),
+                Math.max(start.getRow(), 9 - start.getColumn()),
+                Math.max(9 - start.getRow(), start.getColumn()),
+                Math.max(9 - start.getRow(), 9 - start.getColumn())
         };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromLimits(board, start, limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
+            endMoves.addAll(getMovesFromLimits(board, start, 8 - limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
         }
         return endMoves;
     }
