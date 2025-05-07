@@ -52,15 +52,15 @@ public class ChessMoveCalculator {
 
     public static Collection<ChessMove> getCross(ChessBoard board, ChessPosition start) {
         int[] limits = {
-                8 - start.getColumn(),
-                start.getColumn() - 1,
-                8 - start.getRow(),
-                start.getRow() - 1
+                start.getColumn(),
+                9 - start.getColumn(),
+                start.getRow(),
+                9 - start.getRow()
         };
         int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromLimits(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
+            endMoves.addAll(getMovesFromLimits(board, start, 8 - limits[i], modifiers[i], modifiers[(i + 2) % 4]));
         }
         return endMoves;
     }
