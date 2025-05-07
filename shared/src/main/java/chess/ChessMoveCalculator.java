@@ -60,7 +60,7 @@ public class ChessMoveCalculator {
         int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromLimits(board, start, 8 - limits[i], modifiers[i], modifiers[(i + 2) % 4]));
+            endMoves.addAll(getMovesFromLimits(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
         }
         return endMoves;
     }
@@ -74,7 +74,7 @@ public class ChessMoveCalculator {
         };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromLimits(board, start, 8 - limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
+            endMoves.addAll(getMovesFromLimits(board, start, limits[i], (i < 2 ? +1 : -1), (i % 2 == 0 ? +1 : -1)));
         }
         return endMoves;
     }
@@ -89,7 +89,8 @@ public class ChessMoveCalculator {
         return getMovesFromOffsets(board, start, offsets);
     }
 
-    private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
+    private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int spaces, int rowMod, int colMod) {
+        int limit = 8 - spaces;
         int[][] offsets = new int[limit][];
         for (int i = 1; i <= limit; i++) {
             offsets[i - 1] = new int[] { i * rowMod, i * colMod };
