@@ -22,8 +22,7 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
             execute(deserialize(message, getCommandClass()), session);
         } catch (ServiceException | InvalidMoveException e) {
             try {
-                ErrorMessage error = new ErrorMessage(e.getMessage());
-                session.getRemote().sendString(serialize(error));
+                session.getRemote().sendString(serialize(new ErrorMessage(e.getMessage())));
             } catch (IOException ignored) {}
         }
     }
