@@ -18,7 +18,13 @@ public abstract class ObjectSerializer<T> implements Route {
             T serviceResponse = serviceHandle(request);
             return serialize(serviceResponse);
         } catch (ServiceException e) {
-            throw Spark.halt(getStatusCode(e), "{ \"message\": \"Error: " + e.getMessage() + "\" }");
+            int statusCode = switch (e) {
+                case BadRequestException ignore -> 400;
+                case UnauthorizedException ignore -> 401;
+                case PreexistingException ignore -> 403;
+                default -> 500;
+            };
+            throw Spark.halt(statusCode, "{ \"message\": \"Error: " + e.getMessage() + "\" }");
         }
     }
 
@@ -26,14 +32,5 @@ public abstract class ObjectSerializer<T> implements Route {
 
     protected static String getAuthToken(Request request) {
         return request.headers("authorization");
-    }
-
-    private static int getStatusCode(ServiceException e) {
-        return switch (e) {
-            case BadRequestException ignore -> 400;
-            case UnauthorizedException ignore -> 401;
-            case PreexistingException ignore -> 403;
-            default -> 500;
-        };
     }
 }
