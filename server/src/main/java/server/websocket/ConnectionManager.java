@@ -16,13 +16,14 @@ public class ConnectionManager {
 
     public void addToGame(GameData gameData, String authToken, String username, Session session) {
         Connection newConnection = new Connection(username, session);
-        if (!connectionsToGames.containsKey(gameData.gameID())) {
-            connectionsToGames.put(gameData.gameID(), new ArrayList<>());
+        int gameID = gameData.gameID();
+        if (!connectionsToGames.containsKey(gameID)) {
+            connectionsToGames.put(gameID, new ArrayList<>());
         }
-        connectionsToGames.get(gameData.gameID()).add(newConnection);
+        connectionsToGames.get(gameID).add(newConnection);
         userConnections.put(authToken, newConnection);
 
-        newConnection.send(getLoadGame(gameData.game()));
+        newConnection.send(getLoadGame(gameData));
     }
 
     public void removeFromGame(int gameID, String authToken) {
