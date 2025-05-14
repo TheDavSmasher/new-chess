@@ -13,13 +13,11 @@ import static chess.ChessBoard.BOARD_SIZE;
  */
 public class ChessGame {
     private ChessBoard gameBoard = new ChessBoard();
-    private TeamColor currentTurn;
-    private boolean inPlay;
+    private TeamColor currentTurn = TeamColor.WHITE;
+    private boolean inPlay = true;
 
     public ChessGame() {
         gameBoard.resetBoard();
-        currentTurn = TeamColor.WHITE;
-        inPlay = true;
     }
 
     public boolean isGameOver() { return !inPlay; }
