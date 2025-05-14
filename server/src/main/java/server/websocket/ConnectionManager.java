@@ -57,16 +57,11 @@ public class ConnectionManager {
         if (gameConnections == null) return;
         if (authToken == null) authToken = "";
 
+        gameConnections.removeIf(c -> !c.isOpen());
+
         for (Connection current : gameConnections) {
-            if (!current.isOpen()) {
-                closed.add(current);
-                continue;
-            }
             if (current == userConnections.get(authToken)) continue;
             current.send(notification);
-        }
-        for (Connection close : closed) {
-            gameConnections.remove(close);
         }
     }
 }
