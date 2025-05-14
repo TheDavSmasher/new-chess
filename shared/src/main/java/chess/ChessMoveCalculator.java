@@ -58,8 +58,11 @@ public class ChessMoveCalculator {
         int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            int limit = mirrorIf(i < 2 ? start.getColumn() : start.getRow(), i % 2 == 1);
-            endMoves.addAll(getMovesFromLimits(board, start, limit, modifiers[i], modifiers[(i + 2) % 4]));
+            endMoves.addAll(
+                getMovesFromLimits(board, start,
+                    mirrorIf(i < 2 ? start.getColumn() : start.getRow(), i % 2 == 1),
+                modifiers[i], modifiers[(i + 2) % 4])
+            );
         }
         return endMoves;
     }
@@ -68,8 +71,11 @@ public class ChessMoveCalculator {
         int[] modifiers = { +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            int limit = Math.max(mirrorIf(start.getRow(), i >= 2), mirrorIf(start.getColumn(), i % 2 == 1));
-            endMoves.addAll(getMovesFromLimits(board, start, limit, modifiers[Math.floorDiv(i, 2)], modifiers[i % 2]));
+            endMoves.addAll(
+                getMovesFromLimits(board, start,
+                    Math.max(mirrorIf(start.getRow(), i >= 2), mirrorIf(start.getColumn(), i % 2 == 1)),
+                modifiers[Math.floorDiv(i, 2)], modifiers[i % 2])
+            );
         }
         return endMoves;
     }
