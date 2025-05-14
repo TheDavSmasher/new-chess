@@ -18,7 +18,7 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         return "The game has ended.\n";
     }
 
-    protected String CheckConnection(String authToken) throws ServiceException {
+    protected String checkConnection(String authToken) throws ServiceException {
         Connection connection = connectionManager.getFromUsers(authToken);
         if (connection == null) {
             throw new ServiceException(UNAUTHORIZED);
