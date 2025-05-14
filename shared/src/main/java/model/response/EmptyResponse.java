@@ -1,4 +1,3 @@
 package model.response;
 
-public record EmptyResponse() {
-}
+public record EmptyResponse() {}
