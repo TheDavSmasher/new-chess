@@ -161,7 +161,7 @@ public class ChessGame {
 
     public CheckState getCheckState(TeamColor teamColor) {
         boolean isInCheck = isInCheck(teamColor);
-        boolean hasNoMoves = allPossibleValidMoves(teamColor).isEmpty();
+        boolean hasNoMoves = removeInvalidMoves(allPossibleTeamMoves(teamColor, gameBoard)).isEmpty();
 
         if (isInCheck) {
             if (hasNoMoves)
@@ -193,10 +193,6 @@ public class ChessGame {
             }
         }
         return allMoves;
-    }
-
-    private Collection<ChessMove> allPossibleValidMoves(TeamColor team) {
-        return removeInvalidMoves(allPossibleTeamMoves(team, gameBoard));
     }
 
     /**
