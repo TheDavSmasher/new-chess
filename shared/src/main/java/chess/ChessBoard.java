@@ -67,8 +67,7 @@ public class ChessBoard implements Cloneable {
         for (int i = 0; i < BOARD_SIZE; i++) {
             builder.append(i + 1);
             for (int j = 0; j < BOARD_SIZE; j++) {
-                builder.append('|');
-                builder.append(board[i][j] != null ? board[i][j] : " ");
+                builder.append('|').append(board[i][j] != null ? board[i][j] : " ");
             }
             builder.append('\n');
         }
