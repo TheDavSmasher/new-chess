@@ -55,27 +55,28 @@ public class ChessMoveCalculator {
     }
 
     public static Collection<ChessMove> getCross(ChessBoard board, ChessPosition start) {
-        int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            endMoves.addAll(
-                getMovesFromLimits(board, start,
-                    mirrorIf(i >= 2 ? start.getRow() : start.getColumn(), i % 2 == 1),
-                modifiers[i], modifiers[(i + 2) % 4])
-            );
+        for (boolean row : options) {
+            for (boolean column : options) {
+                endMoves.addAll(getMovesFromLimits(board, start,
+                    mirrorIf(row ? start.getRow() : start.getColumn(), column),
+                row ? (column ? -1 : +1) : 0, row ? 0 : (column ? -1 : +1)));
+
+            }
         }
         return endMoves;
     }
 
+    private static final boolean[] options = { false, true };
+
     public static Collection<ChessMove> getDiagonals(ChessBoard board, ChessPosition start) {
-        int[] modifiers = { +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            endMoves.addAll(
-                getMovesFromLimits(board, start,
-                    Math.max(mirrorIf(start.getRow(), i >= 2), mirrorIf(start.getColumn(), i % 2 == 1)),
-                modifiers[Math.floorDiv(i, 2)], modifiers[i % 2])
-            );
+        for (boolean row : options) {
+            for (boolean column : options) {
+                endMoves.addAll(getMovesFromLimits(board, start,
+                    Math.max(mirrorIf(start.getRow(), row), mirrorIf(start.col(), column)),
+                row ? -1 : +1, column ? -1 : +1));
+            }
         }
         return endMoves;
     }
