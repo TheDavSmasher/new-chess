@@ -22,7 +22,7 @@ public class ConnectionManager {
         connectionsToGames.get(gameData.gameID()).add(newConnection);
         userConnections.put(authToken, newConnection);
 
-        newConnection.send(getGameString(gameData.game()));
+        newConnection.send(getLoadGame(gameData.game()));
     }
 
     public void removeFromGame(int gameID, String authToken) {
@@ -41,15 +41,15 @@ public class ConnectionManager {
     }
 
     public void loadNewGame(ChessGame game, int gameID) {
-        String message = getGameString(game);
+        LoadGameMessage message = getLoadGame(game);
         for (Connection current : connectionsToGames.get(gameID)) {
             current.send(message);
         }
     }
 
-    private String getGameString(ChessGame game) {
+    private LoadGameMessage getLoadGame(ChessGame game) {
         String gameJson = serialize(game);
-        return serialize(new LoadGameMessage(gameJson));
+        return new LoadGameMessage(gameJson);
     }
 
     public void notifyGame(int gameID, Notification notification, String authToken) {
@@ -58,14 +58,13 @@ public class ConnectionManager {
         if (gameConnections == null) return;
         if (authToken == null) authToken = "";
 
-        String message = serialize(notification);
         for (Connection current : gameConnections) {
             if (!current.isOpen()) {
                 closed.add(current);
                 continue;
             }
             if (current == userConnections.get(authToken)) continue;
-            current.send(message);
+            current.send(notification);
         }
         for (Connection close : closed) {
             gameConnections.remove(close);

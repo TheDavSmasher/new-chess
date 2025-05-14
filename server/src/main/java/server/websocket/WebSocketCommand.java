@@ -8,8 +8,6 @@ import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.Notification;
 
-import java.io.IOException;
-
 public abstract class WebSocketCommand<T extends UserGameCommand> {
     protected static final ConnectionManager connectionManager = new ConnectionManager();
 
@@ -21,9 +19,7 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
         try {
             execute(deserialize(message, getCommandClass()), session);
         } catch (ServiceException | InvalidMoveException e) {
-            try {
-                session.getRemote().sendString(serialize(new ErrorMessage(e.getMessage())));
-            } catch (IOException ignored) {}
+            WSServer.send(session, new ErrorMessage(e.getMessage()));
         }
     }
 
