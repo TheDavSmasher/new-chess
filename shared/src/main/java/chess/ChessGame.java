@@ -44,19 +44,15 @@ public class ChessGame {
     }
 
     public static TeamColor getOtherTeam(TeamColor teamColor) {
-        if (teamColor == TeamColor.WHITE) {
-            return TeamColor.BLACK;
-        } else {
-            return TeamColor.WHITE;
-        }
+        return teamColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
     public static int getTeamDirection(TeamColor teamColor) {
         return teamColor == TeamColor.WHITE ? 1 : -1;
     }
 
-    public static int getTeamInitialRow(TeamColor color) {
-        return color == TeamColor.WHITE ? 1 : 8;
+    public static int getTeamInitialRow(TeamColor teamColor) {
+        return teamColor == TeamColor.WHITE ? 1 : 8;
     }
 
     /**
