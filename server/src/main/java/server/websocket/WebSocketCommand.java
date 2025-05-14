@@ -28,7 +28,6 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
     }
 
     protected void notifyGame(int gameID, String authToken, String message) {
-        Notification notification = new Notification(message);
-        connectionManager.notifyGame(gameID, notification, authToken);
+        connectionManager.notifyGame(gameID, new Notification(message), authToken);
     }
 }
