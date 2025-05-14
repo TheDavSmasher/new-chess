@@ -55,31 +55,21 @@ public class ChessMoveCalculator {
     }
 
     public static Collection<ChessMove> getCross(ChessBoard board, ChessPosition start) {
-        int[] limits = {
-                start.getColumn(),
-                9 - start.getColumn(),
-                start.getRow(),
-                9 - start.getRow()
-        };
         int[] modifiers = { 0, 0, +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromLimits(board, start, limits[i], modifiers[i], modifiers[(i + 2) % 4]));
+            int limit = mirrorIf(i < 2 ? start.getColumn() : start.getRow(), i % 2 == 1);
+            endMoves.addAll(getMovesFromLimits(board, start, limit, modifiers[i], modifiers[(i + 2) % 4]));
         }
         return endMoves;
     }
 
     public static Collection<ChessMove> getDiagonals(ChessBoard board, ChessPosition start) {
-        int[] limits = {
-                Math.max(start.getRow(), start.getColumn()),
-                Math.max(start.getRow(), 9 - start.getColumn()),
-                Math.max(9 - start.getRow(), start.getColumn()),
-                Math.max(9 - start.getRow(), 9 - start.getColumn())
-        };
         int[] modifiers = { +1, -1 };
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            endMoves.addAll(getMovesFromLimits(board, start, limits[i], modifiers[Math.floorDiv(i, 2)], modifiers[i % 2]));
+            int limit = Math.max(mirrorIf(start.getRow(), i >= 2), mirrorIf(start.getColumn(), i % 2 == 1));
+            endMoves.addAll(getMovesFromLimits(board, start, limit, modifiers[Math.floorDiv(i, 2)], modifiers[i % 2]));
         }
         return endMoves;
     }
@@ -120,5 +110,9 @@ public class ChessMoveCalculator {
             if (!checkBounds && atTemp != null) { break; }
         }
         return endMoves;
+    }
+
+    private static int mirrorIf(int value, boolean invert) {
+        return invert ? 9 - value : value;
     }
 }
