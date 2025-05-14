@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import static chess.ChessBoard.BOARD_SIZE;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -193,8 +194,8 @@ public class ChessGame {
 
     private Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {
         Collection<ChessMove> allMoves = new ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
+        for (int i = 1; i <= BOARD_SIZE; i++) {
+            for (int j = 1; j <= BOARD_SIZE; j++) {
                 ChessPosition temp = new ChessPosition(i,j);
                 ChessPiece atTemp = board.getPiece(temp);
                 if (atTemp != null && atTemp.getTeamColor() == team) {
