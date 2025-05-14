@@ -28,7 +28,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         game.makeMove(move);
         GameService.updateGameState(command.getAuthToken(), command.getGameID(), serialize(game));
 
-        connectionManager.loadNewGame(game, command.getGameID());
+        connectionManager.loadNewGame(gameData, command.getGameID());
 
         notifyGame(command.getGameID(), command.getAuthToken(), username + " has moved piece at " +
                 positionAsString(move.getStartPosition()) + " to " + positionAsString(move.getEndPosition()) + ".");

@@ -1,6 +1,5 @@
 package server.websocket;
 
-import chess.ChessGame;
 import static model.Serializer.*;
 import model.dataaccess.GameData;
 import org.eclipse.jetty.websocket.api.Session;
@@ -41,16 +40,15 @@ public class ConnectionManager {
         return userConnections.get(authToken);
     }
 
-    public void loadNewGame(ChessGame game, int gameID) {
-        LoadGameMessage message = getLoadGame(game);
+    public void loadNewGame(GameData gameData, int gameID) {
+        LoadGameMessage message = getLoadGame(gameData);
         for (Connection current : connectionsToGames.get(gameID)) {
             current.send(message);
         }
     }
 
-    private LoadGameMessage getLoadGame(ChessGame game) {
-        String gameJson = serialize(game);
-        return new LoadGameMessage(gameJson);
+    private LoadGameMessage getLoadGame(GameData gameData) {
+        return new LoadGameMessage(serialize(gameData.game()));
     }
 
     public void notifyGame(int gameID, Notification notification, String authToken) {
