@@ -10,11 +10,7 @@ import java.util.Arrays;
  */
 public class ChessBoard implements Cloneable {
     public static final int BOARD_SIZE = 8;
-    private ChessPiece[][] board;
-
-    public ChessBoard() {
-         board = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
-    }
+    private ChessPiece[][] board = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
 
     /**
      * Adds a chess piece to the chessboard
