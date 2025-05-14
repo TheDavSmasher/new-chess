@@ -60,7 +60,7 @@ public class ChessMoveCalculator {
         for (int i = 0; i < 4; i++) {
             endMoves.addAll(
                 getMovesFromLimits(board, start,
-                    mirrorIf(i < 2 ? start.getColumn() : start.getRow(), i % 2 == 1),
+                    mirrorIf(i >= 2 ? start.getRow() : start.getColumn(), i % 2 == 1),
                 modifiers[i], modifiers[(i + 2) % 4])
             );
         }
