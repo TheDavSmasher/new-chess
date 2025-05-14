@@ -185,13 +185,10 @@ public class ChessGame {
 
     private boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
         Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(getOtherTeam(teamColor), board);
-        for (ChessMove move : allOpposingMoves) {
+        return allOpposingMoves.stream().anyMatch(move -> {
             ChessPiece temp = board.getPiece(move.getEndPosition());
-            if (temp != null && temp.getTeamColor() == teamColor && temp.getPieceType() == ChessPiece.PieceType.KING) {
-                return true;
-            }
-        }
-        return false;
+            return temp != null && temp.getTeamColor() == teamColor && temp.getPieceType() == ChessPiece.PieceType.KING;
+        });
     }
 
     private Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {
