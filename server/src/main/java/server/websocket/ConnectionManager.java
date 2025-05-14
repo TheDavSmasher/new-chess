@@ -52,7 +52,6 @@ public class ConnectionManager {
     }
 
     public void notifyGame(int gameID, Notification notification, String authToken) {
-        ArrayList<Connection> closed = new ArrayList<>();
         ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
         if (gameConnections == null) return;
         if (authToken == null) authToken = "";
