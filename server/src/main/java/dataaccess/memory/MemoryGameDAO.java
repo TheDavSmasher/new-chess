@@ -26,12 +26,7 @@ public class MemoryGameDAO implements GameDAO {
 
     @Override
     public GameData getGame(int gameID) {
-        for (GameData game : data) {
-            if (game.gameID() == gameID) {
-                return game;
-            }
-        }
-        return null;
+        return data.stream().filter(g -> g.gameID() == gameID).findFirst().orElse(null);
     }
 
     @Override
