@@ -13,14 +13,5 @@ public class Service {
         } catch (DataAccessException e) {
             throw new UnexpectedException(e.getMessage());
         }
-
-    }
-
-    public static void tryCatch(WebSocketCall call) throws ServiceException {
-        try {
-            call.method();
-        } catch (DataAccessException e) {
-            throw new UnexpectedException(e.getMessage());
-        }
     }
 }

@@ -64,12 +64,13 @@ public class GameService extends Service {
                 throw new BadRequestException();
             }
             //If game is over, keep names for legacy
-            if (oldGame.game().isGameOver()) return;
+            if (oldGame.game().isGameOver()) return null;
             if (oldGame.whiteUsername() != null && oldGame.whiteUsername().equals(auth.username())) {
                 gameDAO.updateGamePlayer(gameID, "WHITE", null);
             } else if (oldGame.blackUsername() != null && oldGame.blackUsername().equals(auth.username())) {
                 gameDAO.updateGamePlayer(gameID, "BLACK", null);
             }
+            return null;
         });
     }
 
@@ -78,6 +79,7 @@ public class GameService extends Service {
             UserService.validateAuth(authToken);
             GameDAO gameDAO = GameDAO.getInstance();
             gameDAO.updateGameBoard(gameID, gameJson);
+            return null;
         });
     }
 
