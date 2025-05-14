@@ -7,7 +7,7 @@ import service.UserService;
 
 public class RegisterHandler extends UserEnterHandler {
     @Override
-    protected UserEnterResponse handleEnter(UserEnterRequest userEnterRequest) throws ServiceException {
+    protected UserEnterResponse serviceCall(UserEnterRequest userEnterRequest, String ignored) throws ServiceException {
         return UserService.register(userEnterRequest);
     }
 }
