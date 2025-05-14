@@ -1,6 +1,5 @@
 package dataaccess.memory;
 
-import chess.ChessGame;
 import dataaccess.GameDAO;
 import model.dataaccess.GameData;
 
@@ -33,7 +32,7 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public GameData createGame(String gameName) {
         int newID = data.size() + 1;
-        GameData newGame = new GameData(newID, gameName, new ChessGame());
+        GameData newGame = GameData.createNew(newID, gameName);
         data.add(newGame);
         return newGame;
     }

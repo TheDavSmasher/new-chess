@@ -77,14 +77,14 @@ public class ServerFacadeTests {
         String auth = ServerFacade.register(username, password, email).authToken();
         ServerFacade.createGame(auth, gameName);
         ArrayList<GameData> expected = new ArrayList<>();
-        expected.add(new GameData(1, gameName, null));
+        expected.add(GameData.testEmpty(1, gameName));
 
         Assertions.assertEquals(expected, ServerFacade.listGames(auth));
 
         ServerFacade.createGame(auth, gameName);
         ServerFacade.createGame(auth, gameName);
-        expected.add(new GameData(2, gameName, null));
-        expected.add(new GameData(3, gameName, null));
+        expected.add(GameData.testEmpty(2, gameName));
+        expected.add(GameData.testEmpty(3, gameName));
 
         Assertions.assertEquals(expected, ServerFacade.listGames(auth));
     }

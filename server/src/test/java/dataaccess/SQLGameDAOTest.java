@@ -40,8 +40,8 @@ class SQLGameDAOTest {
         gameDAO.createGame(gameName);
         gameDAO.createGame(gameName);
 
-        Assertions.assertEquals(new GameData(1, gameName, new ChessGame()), gameDAO.getGame(1));
-        Assertions.assertEquals(new GameData(2, gameName, new ChessGame()), gameDAO.getGame(2));
+        Assertions.assertEquals(GameData.createNew(1, gameName), gameDAO.getGame(1));
+        Assertions.assertEquals(GameData.createNew(2, gameName), gameDAO.getGame(2));
     }
 
     @Test
@@ -53,8 +53,8 @@ class SQLGameDAOTest {
 
     @Test
     void createGameTest() throws DataAccessException {
-        Assertions.assertEquals(new GameData(1, gameName, new ChessGame()), gameDAO.createGame(gameName));
-        Assertions.assertEquals(new GameData(2, gameName, new ChessGame()), gameDAO.createGame(gameName));
+        Assertions.assertEquals(GameData.createNew(1, gameName), gameDAO.createGame(gameName));
+        Assertions.assertEquals(GameData.createNew(2, gameName), gameDAO.createGame(gameName));
     }
 
     @Test
