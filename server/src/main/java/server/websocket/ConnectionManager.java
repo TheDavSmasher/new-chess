@@ -7,7 +7,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +22,7 @@ public class ConnectionManager {
         connectionsToGames.get(gameData.gameID()).add(newConnection);
         userConnections.put(authToken, newConnection);
 
-        sendToConnection(userConnections.get(authToken), getGameString(gameData.game()));
+        newConnection.send(getGameString(gameData.game()));
     }
 
     public void removeFromGame(int gameID, String authToken) {
@@ -44,7 +43,7 @@ public class ConnectionManager {
     public void loadNewGame(ChessGame game, int gameID) {
         String message = getGameString(game);
         for (Connection current : connectionsToGames.get(gameID)) {
-            sendToConnection(current, message);
+            current.send(message);
         }
     }
 
@@ -66,16 +65,10 @@ public class ConnectionManager {
                 continue;
             }
             if (current == userConnections.get(authToken)) continue;
-            sendToConnection(current, message);
+            current.send(message);
         }
         for (Connection close : closed) {
             gameConnections.remove(close);
         }
-    }
-
-    public void sendToConnection(Connection connection, String message) {
-        try {
-            connection.send(message);
-        } catch (IOException ignored) {}
     }
 }
