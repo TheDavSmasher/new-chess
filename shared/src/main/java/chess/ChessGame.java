@@ -86,13 +86,8 @@ public class ChessGame {
     }
 
     private Collection<ChessMove> removeInvalidMoves(Collection<ChessMove> moves) {
-        Collection<ChessMove> validMoves = new ArrayList<>();
-        for (ChessMove test : moves) {
-            if (!moveLeavesInCheck(test)) {
-                validMoves.add(test);
-            }
-        }
-        return validMoves;
+        moves.removeIf(this::moveLeavesInCheck);
+        return moves;
     }
 
     private boolean moveLeavesInCheck(ChessMove move) {
