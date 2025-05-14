@@ -43,8 +43,8 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
     }
 
     private ChessGame.TeamColor userIsPlayer(GameData data, String username) {
-        if (data.whiteUsername() != null && data.whiteUsername().equals(username)) return ChessGame.TeamColor.WHITE;
-        if (data.blackUsername() != null && data.blackUsername().equals(username)) return ChessGame.TeamColor.BLACK;
+        if (username.equals(data.whiteUsername())) return ChessGame.TeamColor.WHITE;
+        if (username.equals(data.blackUsername())) return ChessGame.TeamColor.BLACK;
         return null;
     }
 }
