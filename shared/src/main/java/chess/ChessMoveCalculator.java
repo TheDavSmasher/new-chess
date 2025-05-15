@@ -61,14 +61,6 @@ public class ChessMoveCalculator {
 
     private static final boolean[] options = { false, true };
 
-    private static int getMod(boolean param) {
-        return param ? -1 : 1;
-    }
-
-    private static int getMod(boolean a, boolean b) {
-        return a ? 0 : b ? -1 : 1;
-    }
-
     public static Collection<ChessMove> getCross(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (boolean row : options) {
@@ -147,6 +139,14 @@ public class ChessMoveCalculator {
             if (atTemp != null) { break; }
         }
         return endMoves;
+    }
+
+    private static int getMod(boolean param) {
+        return param ? -1 : 1;
+    }
+
+    private static int getMod(boolean a, boolean b) {
+        return a ? 0 : b ? -1 : 1;
     }
 
     private static int mirrorIf(int value, boolean invert) {
