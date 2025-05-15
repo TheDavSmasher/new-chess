@@ -141,8 +141,8 @@ public class ChessMoveCalculator {
         return endMoves;
     }
 
-    private static int getMod(boolean param) {
-        return param ? -1 : 1;
+    private static int getMod(boolean b) {
+        return getMod(false, b);
     }
 
     private static int getMod(boolean a, boolean b) {
