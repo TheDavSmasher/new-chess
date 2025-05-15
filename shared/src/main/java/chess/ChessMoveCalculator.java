@@ -78,7 +78,7 @@ public class ChessMoveCalculator {
         for (boolean row : options) {
             for (boolean col : options) {
                 endMoves.addAll(getMovesFromLimits(board, start,
-                    mirrorIf(row ? start.getRow() : start.getColumn(), col),
+                    8 - mirrorIf(row ? start.getRow() : start.getColumn(), col),
                 getMod(!row, col), getMod(row, col)));
             }
         }
@@ -90,7 +90,7 @@ public class ChessMoveCalculator {
         for (boolean row : options) {
             for (boolean col : options) {
                 endMoves.addAll(getMovesFromLimits(board, start,
-                    Math.max(mirrorIf(start.getRow(), row), mirrorIf(start.col(), col)),
+                    8 - Math.max(mirrorIf(start.getRow(), row), mirrorIf(start.col(), col)),
                 getMod(row), getMod(col)));
             }
         }
@@ -126,11 +126,10 @@ public class ChessMoveCalculator {
     }
 
     private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int rowMod, int colMod) {
-        return getMovesFromLimits(board, start, 7, rowMod, colMod);
+        return getMovesFromLimits(board, start, 1, rowMod, colMod);
     }
 
-    private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int spaces, int rowMod, int colMod) {
-        int limit = 8 - spaces;
+    private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int limit, int rowMod, int colMod) {
         int[][] offsets = new int[limit][];
         for (int i = 1; i <= limit; i++) {
             offsets[i - 1] = new int[] { i * rowMod, i * colMod };
