@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import static chess.ChessGame.*;
 
+@FunctionalInterface
+interface IntToBool {
+    int apply(boolean i);
+}
+
 public class ChessMoveCalculator {
     public static Collection<ChessMove> getQueen(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> queenMoves = getDiagonals(board, myPosition);
@@ -94,8 +99,22 @@ public class ChessMoveCalculator {
     }
 
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
-        int[][] offsets = { {+2, +1}, {+1, +2}, {-2, +1}, {-1, +2}, {-2, -1}, {-1, -2}, {+2, -1}, {+1, -2} };
-        return getMovesFromOffsets(board, start, offsets);
+        Collection<ChessMove> endMoves = new ArrayList<>();
+        IntToBool diagonal = b -> b ? 1 : 2;
+        for (boolean h : options) {
+            for (boolean v : options) {
+                for (boolean d : options) {
+                    endMoves.addAll(getMovesFromLimits(board, start,
+                            diagonal.apply(d) * getMod(h), diagonal.apply(!d) * getMod(v)));
+                }
+            }
+        }
+        return endMoves;
+
+    }
+
+    private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int rowMod, int colMod) {
+        return getMovesFromLimits(board, start, 7, rowMod, colMod);
     }
 
     private static Collection<ChessMove> getMovesFromLimits(ChessBoard board, ChessPosition start, int spaces, int rowMod, int colMod) {
@@ -116,7 +135,7 @@ public class ChessMoveCalculator {
         ChessGame.TeamColor color = board.getPiece(start).color();
         for (int[] offset : offsets) {
             ChessPosition temp = new ChessPosition(start.getRow() + offset[0], start.getColumn() + offset[1]);
-            if (checkBounds && temp.outOfBounds()) continue;
+            if (temp.outOfBounds()) continue;
             ChessPiece atTemp = board.getPiece(temp);
             if (atTemp == null || (atTemp.color() != color)) {
                 endMoves.add(new ChessMove(start, temp, null));
