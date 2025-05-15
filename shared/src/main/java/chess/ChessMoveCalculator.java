@@ -54,6 +54,8 @@ public class ChessMoveCalculator {
         }
     }
 
+    private static final boolean[] options = { false, true };
+
     public static Collection<ChessMove> getCross(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (boolean row : options) {
@@ -65,8 +67,6 @@ public class ChessMoveCalculator {
         }
         return endMoves;
     }
-
-    private static final boolean[] options = { false, true };
 
     public static Collection<ChessMove> getDiagonals(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
