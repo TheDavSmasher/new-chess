@@ -95,11 +95,11 @@ public class ChessMoveCalculator {
 
     public static Collection<ChessMove> getKing(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
-        for (boolean h : options) {
-            for (boolean v : options) {
-                for (boolean d : options) {
-                    BoolToInt f = b -> getMod(d && b, v && b) * getMod(h);
-                    endMoves.addAll(getMovesFromLimits(board, start, f.apply(v), f.apply(!v)));
+        for (boolean half : options) {
+            for (boolean quarter : options) {
+                for (boolean slice : options) {
+                    BoolToInt f = b -> getMod(slice && b, quarter && b) * getMod(half);
+                    endMoves.addAll(getMovesFromLimits(board, start, f.apply(quarter), f.apply(!quarter)));
                 }
             }
         }
@@ -108,12 +108,12 @@ public class ChessMoveCalculator {
 
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
-        BoolToInt diagonal = d -> d ? 1 : 2;
+        BoolToInt f = d -> d ? 1 : 2;
         for (boolean row : options) {
             for (boolean col : options) {
-                for (boolean d : options) {
+                for (boolean shape : options) {
                     endMoves.addAll(getMovesFromLimits(board, start,
-                            diagonal.apply(d) * getMod(row), diagonal.apply(!d) * getMod(col)));
+                            f.apply(shape) * getMod(row), f.apply(!shape) * getMod(col)));
                 }
             }
         }
