@@ -31,8 +31,8 @@ public class ChessMoveCalculator {
         }
 
         //Eating
-        for (int i = -1; i < 2; i += 2) {
-            temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn() + i);
+        for (boolean dir : options) {
+            temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn() + getMod(dir));
             atTemp = board.getPiece(temp);
             if (atTemp != null && atTemp.color() != color) {
                 addPawnPromotionMoves(endMoves, start, temp, color);
