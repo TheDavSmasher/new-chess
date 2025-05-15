@@ -94,13 +94,21 @@ public class ChessMoveCalculator {
     }
 
     public static Collection<ChessMove> getKing(ChessBoard board, ChessPosition start) {
-        int[][] offsets = { {0, +1}, {0, -1}, {+1, 0}, {-1, 0}, {+1, +1}, {+1, -1}, {-1, -1}, {-1, +1} };
-        return getMovesFromOffsets(board, start, offsets);
+        Collection<ChessMove> endMoves = new ArrayList<>();
+        for (boolean h : options) {
+            for (boolean v : options) {
+                for (boolean d : options) {
+                    BoolToInt f = b -> getMod(d && b, v && b) * getMod(h);
+                    endMoves.addAll(getMovesFromLimits(board, start, f.apply(v), f.apply(!v)));
+                }
+            }
+        }
+        return endMoves;
     }
 
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
-        BoolToInt diagonal = b -> b ? 1 : 2;
+        BoolToInt diagonal = d -> d ? 1 : 2;
         for (boolean h : options) {
             for (boolean v : options) {
                 for (boolean d : options) {
