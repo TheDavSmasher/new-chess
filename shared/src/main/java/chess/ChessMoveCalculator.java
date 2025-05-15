@@ -72,10 +72,10 @@ public class ChessMoveCalculator {
     public static Collection<ChessMove> getCross(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (boolean row : options) {
-            for (boolean column : options) {
+            for (boolean col : options) {
                 endMoves.addAll(getMovesFromLimits(board, start,
-                    mirrorIf(row ? start.getRow() : start.getColumn(), column),
-                getMod(!row, column), getMod(row, column)));
+                    mirrorIf(row ? start.getRow() : start.getColumn(), col),
+                getMod(!row, col), getMod(row, col)));
             }
         }
         return endMoves;
@@ -84,10 +84,10 @@ public class ChessMoveCalculator {
     public static Collection<ChessMove> getDiagonals(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         for (boolean row : options) {
-            for (boolean column : options) {
+            for (boolean col : options) {
                 endMoves.addAll(getMovesFromLimits(board, start,
-                    Math.max(mirrorIf(start.getRow(), row), mirrorIf(start.col(), column)),
-                getMod(row), getMod(column)));
+                    Math.max(mirrorIf(start.getRow(), row), mirrorIf(start.col(), col)),
+                getMod(row), getMod(col)));
             }
         }
         return endMoves;
@@ -109,11 +109,11 @@ public class ChessMoveCalculator {
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         BoolToInt diagonal = d -> d ? 1 : 2;
-        for (boolean h : options) {
-            for (boolean v : options) {
+        for (boolean row : options) {
+            for (boolean col : options) {
                 for (boolean d : options) {
                     endMoves.addAll(getMovesFromLimits(board, start,
-                            diagonal.apply(d) * getMod(h), diagonal.apply(!d) * getMod(v)));
+                            diagonal.apply(d) * getMod(row), diagonal.apply(!d) * getMod(col)));
                 }
             }
         }
