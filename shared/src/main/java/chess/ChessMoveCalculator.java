@@ -5,7 +5,7 @@ import java.util.Collection;
 import static chess.ChessGame.*;
 
 @FunctionalInterface
-interface IntToBool {
+interface BoolToInt {
     int apply(boolean i);
 }
 
@@ -100,7 +100,7 @@ public class ChessMoveCalculator {
 
     public static Collection<ChessMove> getKnight(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
-        IntToBool diagonal = b -> b ? 1 : 2;
+        BoolToInt diagonal = b -> b ? 1 : 2;
         for (boolean h : options) {
             for (boolean v : options) {
                 for (boolean d : options) {
