@@ -61,7 +61,6 @@ public class ChessMoveCalculator {
                 endMoves.addAll(getMovesFromLimits(board, start,
                     mirrorIf(row ? start.getRow() : start.getColumn(), column),
                 row ? (column ? -1 : +1) : 0, row ? 0 : (column ? -1 : +1)));
-
             }
         }
         return endMoves;
