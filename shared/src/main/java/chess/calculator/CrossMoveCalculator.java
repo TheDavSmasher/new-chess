@@ -10,6 +10,6 @@ public class CrossMoveCalculator extends LimitMoveCalculator {
 
     @Override
     protected int getDirMod(boolean isRow, boolean flipRow, boolean flipCol) {
-        return getMod(flipRow ^ isRow, flipCol);
+        return getMod(isRow ^ flipRow, flipCol);
     }
 }
