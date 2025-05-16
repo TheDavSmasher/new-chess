@@ -9,7 +9,7 @@ public class DiagonalMoveCalculator extends LimitMoveCalculator {
     }
 
     @Override
-    protected int getDirMod(boolean isRow, boolean flipRow, boolean flipCol) {
+    protected int getDirMod(boolean isRow, boolean flipRow, boolean flipCol, boolean ignored) {
         return getMod(isRow ? flipRow : flipCol);
     }
 }
