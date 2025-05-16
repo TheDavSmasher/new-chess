@@ -24,7 +24,7 @@ public class PawnMoveCalculator extends PieceMoveCalculator {
             //Special Case: Initial Move up to 2 forward
             temp = new ChessPosition(start.getRow() + (2 * pieceDirection), start.getColumn());
             if (start.getRow() == (color == ChessGame.TeamColor.BLACK ? 7 : 2) && board.getPiece(temp) == null) {
-                endMoves.add(new ChessMove(start, temp, null));
+                endMoves.add(new ChessMove(start, temp));
             }
         }
 

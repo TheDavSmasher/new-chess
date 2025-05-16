@@ -7,6 +7,10 @@ package chess;
  * signature of the existing methods.
  */
 public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
+    public ChessMove(ChessPosition startPosition, ChessPosition endPosition) {
+        this(startPosition, endPosition, null);
+    }
+
     /**
      * @return ChessPosition of starting location
      */
@@ -30,7 +34,6 @@ public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, 
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
     }
-
 
     @Override
     public String toString() {
