@@ -134,10 +134,7 @@ public class ChessMoveCalculator {
         for (int i = 1; i <= limit; i++) {
             offsets[i - 1] = new int[] { i * rowMod, i * colMod };
         }
-        return getMovesFromOffsets(board, start, offsets);
-    }
 
-    private static Collection<ChessMove> getMovesFromOffsets(ChessBoard board, ChessPosition start, int[][] offsets) {
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
         for (int[] offset : offsets) {
