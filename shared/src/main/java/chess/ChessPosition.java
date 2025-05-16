@@ -27,6 +27,10 @@ public record ChessPosition(int row, int col) {
         return (row > 8 || row < 1) || (col > 8 || col < 1);
     }
 
+    public ChessPosition offsetBy(int offRow, int offCol) {
+        return new ChessPosition(row + offRow, col + offCol);
+    }
+
     @Override
     public String toString() {
         return row + "," + col;
