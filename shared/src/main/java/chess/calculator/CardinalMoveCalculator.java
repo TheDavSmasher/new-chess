@@ -12,7 +12,7 @@ public abstract class CardinalMoveCalculator extends PieceMoveCalculator {
         for (boolean flipA : options) {
             for (boolean flipB : options) {
                 for (boolean flipC : options) {
-                    endMoves.addAll(getMovesFromLimits(board, start, getLimit(start, flipA, flipB, flipC),
+                    endMoves.addAll(getMovesFromLimits(board, start, getLimit(start, flipA, flipB),
                             getDirMod(true, flipA, flipB, flipC), getDirMod(false, flipA, flipB, flipC)));
                     if (ignoreThird()) break;
                 }
@@ -21,7 +21,7 @@ public abstract class CardinalMoveCalculator extends PieceMoveCalculator {
         return endMoves;
     }
 
-    protected abstract int getLimit(ChessPosition start, boolean flipA, boolean flipB, boolean flipC);
+    protected abstract int getLimit(ChessPosition start, boolean flipA, boolean flipB);
     protected abstract int getDirMod(boolean isRow, boolean flipA, boolean flipB, boolean flipC);
     protected abstract boolean ignoreThird();
 

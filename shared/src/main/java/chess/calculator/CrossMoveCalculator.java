@@ -4,7 +4,7 @@ import chess.ChessPosition;
 
 public class CrossMoveCalculator extends LimitMoveCalculator {
     @Override
-    protected int getLimit(ChessPosition start, boolean flipRow, boolean flipCol) {
+    protected int getSpace(ChessPosition start, boolean flipRow, boolean flipCol) {
         return mirrorIf(flipRow ? start.getRow() : start.getColumn(), flipCol);
     }
 
