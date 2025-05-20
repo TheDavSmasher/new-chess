@@ -13,18 +13,21 @@ public class PawnMoveCalculator extends PieceMoveCalculator {
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
         int pieceDirection = getTeamDirection(color);
+        ChessPosition temp;
         ChessPiece atTemp;
         //Move Forward
-        ChessPosition temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn());
-
+        temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn());
         atTemp = board.getPiece(temp);
         if (atTemp == null) {
             addPawnPromotionMoves(endMoves, start, temp, color);
 
-            //Special Case: Initial Move up to 2 forward
-            temp = new ChessPosition(start.getRow() + (2 * pieceDirection), start.getColumn());
-            if (start.getRow() == (color == ChessGame.TeamColor.BLACK ? 7 : 2) && board.getPiece(temp) == null) {
-                endMoves.add(new ChessMove(start, temp));
+            if (start.getRow() == getTeamInitialRow(color) + pieceDirection) {
+                //Special Case: Initial Move up to 2 forward
+                temp = new ChessPosition(start.getRow() + (2 * pieceDirection), start.getColumn());
+                atTemp = board.getPiece(temp);
+                if (atTemp == null) {
+                    endMoves.add(new ChessMove(start, temp));
+                }
             }
         }
 
