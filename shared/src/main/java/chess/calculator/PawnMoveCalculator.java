@@ -15,20 +15,13 @@ public class PawnMoveCalculator extends PieceMoveCalculator {
         int pieceDirection = getTeamDirection(color);
         ChessPosition temp;
         ChessPiece atTemp;
-        //Move Forward
-        temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn());
-        atTemp = board.getPiece(temp);
-        if (atTemp == null) {
-            addPawnPromotionMoves(endMoves, start, temp, color);
-
-            if (start.getRow() == getTeamInitialRow(color) + pieceDirection) {
-                //Special Case: Initial Move up to 2 forward
-                temp = new ChessPosition(start.getRow() + (2 * pieceDirection), start.getColumn());
-                atTemp = board.getPiece(temp);
-                if (atTemp == null) {
-                    endMoves.add(new ChessMove(start, temp));
-                }
+        for (boolean offset : options) {
+            temp = new ChessPosition(start.getRow() + getOffset(offset) * pieceDirection, start.getColumn());
+            atTemp = board.getPiece(temp);
+            if (atTemp != null || start.getRow() != getTeamInitialRow(color) + pieceDirection) {
+                break;
             }
+            addPawnPromotionMoves(endMoves, start, temp, color);
         }
 
         //Eating
