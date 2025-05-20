@@ -11,6 +11,10 @@ public abstract class PieceMoveCalculator {
 
     protected static boolean[] options = { false, true };
 
+    protected static int getOffset(boolean a) {
+        return a ? 1 : 2;
+    }
+
     protected static int getMod(boolean b) {
         return getMod(false, b);
     }
