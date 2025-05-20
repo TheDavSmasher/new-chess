@@ -9,13 +9,14 @@ public abstract class CardinalMoveCalculator extends ProgrammaticMoveCalculator 
     protected boolean collectMovesInDirection(
             ChessBoard board, ChessPosition start, Collection<ChessMove> endMoves,
             boolean flipA, boolean flipB, boolean flipC) {
+        ChessGame.TeamColor color = board.getPiece(start).color();
         for (int i = 1; i <= getLimit(start, flipA, flipB); i++) {
             ChessPosition temp = new ChessPosition(
                     start.row() + i * getDirMod(true, flipA, flipB, flipC),
                     start.col() + i * getDirMod(false, flipA, flipB, flipC));
             if (temp.outOfBounds()) continue;
             ChessPiece atTemp = board.getPiece(temp);
-            if (atTemp == null || (atTemp.color() != board.getPiece(start).color())) {
+            if (atTemp == null || (atTemp.color() != color)) {
                 endMoves.add(new ChessMove(start, temp));
             }
             if (atTemp != null) { break; }

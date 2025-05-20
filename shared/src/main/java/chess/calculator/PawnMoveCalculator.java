@@ -10,27 +10,42 @@ public class PawnMoveCalculator extends ProgrammaticMoveCalculator {
     @Override
     protected boolean collectMovesInDirection(
             ChessBoard board, ChessPosition start, Collection<ChessMove> endMoves,
-            boolean forward, boolean dir, boolean ignored) {
+            boolean flipA, boolean flipB, boolean flipC) {
         ChessGame.TeamColor color = board.getPiece(start).color();
-        int pieceDirection = getTeamDirection(color);
-        ChessPosition temp = new ChessPosition(
-                start.getRow() + getOffset(forward && dir) * pieceDirection,
-                start.getColumn() + getMod(forward, dir));
-        ChessPiece atTemp = board.getPiece(temp);
-        if (forward && atTemp != null) { return true; }
-        if (forward || atTemp != null && atTemp.color() != color) {
-            ChessPiece.PieceType[] pieces = temp.getRow() == getTeamInitialRow(getOtherTeam(color))
-                    ? promotions : new ChessPiece.PieceType[] {null};
-            for (var pieceType : pieces) {
-                endMoves.add(new ChessMove(start, temp, pieceType));
+        flipC = color == TeamColor.BLACK;
+        for (int i = 1; i <= getLimit(start, flipA, flipB); i++) {
+            ChessPosition temp = new ChessPosition(
+                    start.row() + getDirMod(true, flipA, flipB, flipC),
+                    start.col() + getDirMod(false, flipA, flipB, flipC));
+            ChessPiece atTemp = board.getPiece(temp);
+            if (flipA && atTemp != null) {
+                return true;
+            }
+            if (flipA || atTemp != null && atTemp.color() != color) {
+                ChessPiece.PieceType[] pieces = temp.getRow() == getTeamInitialRow(getOtherTeam(color))
+                        ? promotions : new ChessPiece.PieceType[] { null };
+                for (var pieceType : pieces) {
+                    endMoves.add(new ChessMove(start, temp, pieceType));
+                }
+            }
+            if (flipA && start.getRow() != getTeamInitialRow(color) + getTeamDirection(color)) {
+                return true;
             }
         }
-        return forward && start.getRow() != getTeamInitialRow(color) + pieceDirection;
+        return false;
+    }
+
+    protected int getLimit(ChessPosition start, boolean flipA, boolean flipB) {
+        return 1;
     }
 
     @Override
     protected boolean ignoreThird() {
         return true;
+    }
+
+    protected int getDirMod(boolean isRow, boolean flipA, boolean flipB, boolean flipC) {
+        return isRow ? getOffset(flipA && flipB) * getMod(flipC) : getMod(flipA, flipB);
     }
 
     private static final ChessPiece.PieceType[] promotions = {
