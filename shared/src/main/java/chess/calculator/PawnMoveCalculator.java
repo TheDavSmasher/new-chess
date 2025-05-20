@@ -2,7 +2,6 @@ package chess.calculator;
 
 import chess.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import static chess.ChessGame.*;
