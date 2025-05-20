@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import static chess.ChessGame.*;
 
-public class PawnMoveCalculator extends PieceMoveCalculator {
+public class PawnMoveCalculator extends ProgrammaticMoveCalculator {
     @Override
     public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> endMoves = new ArrayList<>();
