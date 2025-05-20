@@ -13,22 +13,20 @@ public class PawnMoveCalculator extends PieceMoveCalculator {
         Collection<ChessMove> endMoves = new ArrayList<>();
         ChessGame.TeamColor color = board.getPiece(start).color();
         int pieceDirection = getTeamDirection(color);
-        ChessPosition temp;
-        ChessPiece atTemp;
-        for (boolean offset : options) {
-            temp = new ChessPosition(start.getRow() + getOffset(offset) * pieceDirection, start.getColumn());
-            atTemp = board.getPiece(temp);
-            if (atTemp != null) { break; }
-            addPawnPromotionMoves(endMoves, start, temp, color);
-            if (start.getRow() != getTeamInitialRow(color) + pieceDirection) { break; }
-        }
 
-        //Eating
-        for (boolean dir : options) {
-            temp = new ChessPosition(start.getRow() + pieceDirection, start.getColumn() + getMod(dir));
-            atTemp = board.getPiece(temp);
-            if (atTemp != null && atTemp.color() != color) {
-                addPawnPromotionMoves(endMoves, start, temp, color);
+        for (boolean forward : options) {
+            for (boolean dir : options) {
+                ChessPosition temp = new ChessPosition(start.getRow() + getOffset(forward && dir) * pieceDirection, start.getColumn() + getMod(forward, dir));
+                ChessPiece atTemp = board.getPiece(temp);
+                if (forward && atTemp != null) { break; }
+                if (forward || atTemp != null && atTemp.color() != color) {
+                    ChessPiece.PieceType[] pieces = temp.getRow() == getTeamInitialRow(getOtherTeam(color))
+                            ? promotions : new ChessPiece.PieceType[] {null};
+                    for (var pieceType : pieces) {
+                        endMoves.add(new ChessMove(start, temp, pieceType));
+                    }
+                }
+                if (forward && start.getRow() != getTeamInitialRow(color) + pieceDirection) { break; }
             }
         }
 
@@ -38,13 +36,4 @@ public class PawnMoveCalculator extends PieceMoveCalculator {
     private static final ChessPiece.PieceType[] promotions = {
             ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.ROOK
     };
-
-    private static void addPawnPromotionMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end, ChessGame.TeamColor color) {
-        ChessPiece.PieceType[] pieces = end.getRow() == getTeamInitialRow(getOtherTeam(color))
-                ? promotions
-                : new ChessPiece.PieceType[] {null};
-        for (var pieceType : pieces) {
-            moves.add(new ChessMove(start, end, pieceType));
-        }
-    }
 }
