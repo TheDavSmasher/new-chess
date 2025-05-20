@@ -18,10 +18,9 @@ public class PawnMoveCalculator extends PieceMoveCalculator {
         for (boolean offset : options) {
             temp = new ChessPosition(start.getRow() + getOffset(offset) * pieceDirection, start.getColumn());
             atTemp = board.getPiece(temp);
-            if (atTemp != null || start.getRow() != getTeamInitialRow(color) + pieceDirection) {
-                break;
-            }
+            if (atTemp != null) { break; }
             addPawnPromotionMoves(endMoves, start, temp, color);
+            if (start.getRow() != getTeamInitialRow(color) + pieceDirection) { break; }
         }
 
         //Eating
@@ -32,6 +31,7 @@ public class PawnMoveCalculator extends PieceMoveCalculator {
                 addPawnPromotionMoves(endMoves, start, temp, color);
             }
         }
+
         return endMoves;
     }
 
