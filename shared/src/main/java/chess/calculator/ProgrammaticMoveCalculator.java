@@ -25,9 +25,27 @@ public abstract class ProgrammaticMoveCalculator implements PieceMoveCalculator 
         return endMoves;
     }
 
-    protected abstract boolean collectMovesInDirection(
+    protected boolean collectMovesInDirection(
             ChessBoard board, ChessPosition start, Collection<ChessMove> endMoves,
-            boolean flipA, boolean flipB, boolean flipC);
+            boolean flipA, boolean flipB, boolean flipC) {
+        for (int i = 1; i <= getLimit(start, flipA, flipB); i++) {
+            ChessPosition temp = new ChessPosition(
+                    start.row() + i * getDirMod(true, flipA, flipB, flipC),
+                    start.col() + i * getDirMod(false, flipA, flipB, flipC));
+            if (temp.outOfBounds()) continue;
+            Boolean state = checkAndAdd(endMoves, board, start, temp, flipA);
+            if (state == null) {
+                break;
+            } else if (state) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected abstract Boolean checkAndAdd(Collection<ChessMove> endMoves, ChessBoard board, ChessPosition start, ChessPosition temp, boolean flipA);
+    protected abstract int getLimit(ChessPosition start, boolean flipA, boolean flipB);
+    protected abstract int getDirMod(boolean isRow, boolean flipA, boolean flipB, boolean flipC);
     protected abstract boolean ignoreThird();
 
     protected static boolean[] options = { false, true };
