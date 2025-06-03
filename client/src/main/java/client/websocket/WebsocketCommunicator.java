@@ -9,35 +9,33 @@ import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 
-public class WebsocketCommunicator extends Endpoint {
+public class WebsocketCommunicator extends Endpoint implements MessageHandler.Whole<String> {
     private final Session session;
     private final ServerMessageObserver observer;
 
-    @SuppressWarnings("Convert2Lambda")
     public WebsocketCommunicator(String url, ServerMessageObserver messageObserver) throws IOException {
         try {
             observer = messageObserver;
-            url = url.replace("http", "ws");
-            URI socketURI = URI.create(url + "ws");
+            URI socketURI = URI.create(url.replace("http", "ws") + "ws");
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             session = container.connectToServer(this, socketURI);
 
-            session.addMessageHandler(new MessageHandler.Whole<String>() {
-                @Override
-                public void onMessage(String message) {
-                    Class<? extends ServerMessage> messageClass =
-                    switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
-                        case NOTIFICATION -> Notification.class;
-                        case LOAD_GAME -> LoadGameMessage.class;
-                        case ERROR -> ErrorMessage.class;
-                    };
-                    observer.notify(deserialize(message, messageClass));
-                }
-            });
-        } catch (DeploymentException | IOException e) {
+            session.addMessageHandler(this);
+        } catch (DeploymentException e) {
             throw new IOException(e.getMessage());
         }
+    }
+
+    @Override
+    public void onMessage(String message) {
+        Class<? extends ServerMessage> messageClass =
+                switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
+                    case NOTIFICATION -> Notification.class;
+                    case LOAD_GAME -> LoadGameMessage.class;
+                    case ERROR -> ErrorMessage.class;
+                };
+        observer.notify(deserialize(message, messageClass));
     }
 
     @Override
