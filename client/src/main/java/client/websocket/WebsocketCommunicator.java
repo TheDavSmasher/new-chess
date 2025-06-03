@@ -16,11 +16,8 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
     public WebsocketCommunicator(String url, ServerMessageObserver messageObserver) throws IOException {
         try {
             observer = messageObserver;
-            URI socketURI = URI.create(url.replace("http", "ws") + "ws");
-
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            session = container.connectToServer(this, socketURI);
-
+            session = ContainerProvider.getWebSocketContainer()
+                    .connectToServer(this, URI.create(url.replace("http", "ws") + "ws"));
             session.addMessageHandler(this);
         } catch (DeploymentException e) {
             throw new IOException(e.getMessage());
